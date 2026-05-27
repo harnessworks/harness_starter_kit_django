@@ -138,7 +138,14 @@ def looks_like_command(reference: str) -> bool:
         first = shlex.split(reference, posix=False)[0]
     except (IndexError, ValueError):
         return False
-    return first in command_roots
+
+    normalized = first.strip("\"'").replace("\\", "/").lower()
+    return (
+        first in command_roots
+        or normalized in {".venv/scripts/python.exe", ".venv/bin/python"}
+        or normalized.endswith("/python.exe")
+        or normalized.endswith("/python")
+    )
 
 
 def looks_like_path(reference: Reference) -> bool:
