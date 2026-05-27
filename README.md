@@ -4,6 +4,8 @@
 Django 게시판 프로젝트입니다. 현재 기능은 공개 읽기 게시판 CRUD이며, Django의
 모델, 폼, 클래스 기반 뷰, 인증, 템플릿, 테스트, 마이그레이션을 사용합니다.
 
+https://velog.io/@ssafy_elonmusk/%ED%95%98%EB%84%A4%EC%8A%A4-%EC%97%94%EC%A7%80%EB%8B%88%EC%96%B4%EB%A7%81-Harness-Engineering-%EC%9D%B4%EB%9E%80
+
 ## 주요 기능
 
 - `/`: 게시글 목록
