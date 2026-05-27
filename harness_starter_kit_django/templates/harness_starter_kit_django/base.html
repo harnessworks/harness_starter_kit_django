@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}게시판{% endblock %}</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f6f7f9;
+            --panel: #ffffff;
+            --text: #1d2433;
+            --muted: #687386;
+            --border: #d9dee7;
+            --accent: #146c63;
+            --accent-strong: #0f514b;
+            --danger: #b3261e;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, "Malgun Gothic", sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .site-header {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .site-header__inner,
+        .page {
+            width: min(960px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .site-header__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 64px;
+        }
+
+        .brand {
+            color: var(--text);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .page {
+            padding: 32px 0 48px;
+        }
+
+        .page-title {
+            margin: 0 0 20px;
+            font-size: 28px;
+            line-height: 1.25;
+        }
+
+        .panel,
+        .post-list {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .panel {
+            padding: 24px;
+        }
+
+        .post-list {
+            overflow: hidden;
+        }
+
+        .post-row {
+            display: block;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .post-row:last-child {
+            border-bottom: 0;
+        }
+
+        .post-row__title {
+            margin: 0 0 6px;
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .meta,
+        .empty {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .content {
+            white-space: pre-wrap;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .button,
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 8px 14px;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            background: var(--accent);
+            color: #ffffff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 700;
+        }
+
+        .button:hover,
+        button:hover {
+            background: var(--accent-strong);
+            text-decoration: none;
+        }
+
+        .button--secondary {
+            background: var(--panel);
+            color: var(--accent);
+        }
+
+        .button--danger {
+            border-color: var(--danger);
+            background: var(--danger);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: var(--text);
+            font: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .errorlist {
+            margin: 6px 0 0;
+            padding-left: 20px;
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a class="brand" href="{% url 'posts:list' %}">게시판</a>
+            <a class="button" href="{% url 'posts:create' %}">새 글</a>
+        </div>
+    </header>
+    <main class="page">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

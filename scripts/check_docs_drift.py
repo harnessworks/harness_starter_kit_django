@@ -121,6 +121,8 @@ def is_ignored_reference(reference: str) -> bool:
     normalized = normalize(reference)
     if not normalized:
         return True
+    if normalized.startswith("/"):
+        return True
     if normalized in OPTIONAL_REFERENCES:
         return True
     ignored_cache_dirs = {"__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache"}

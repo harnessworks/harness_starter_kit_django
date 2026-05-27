@@ -1,0 +1,25 @@
+{% extends "harness_starter_kit_django/base.html" %}
+
+{% block title %}게시글 목록{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">게시글 목록</h1>
+
+    {% if posts %}
+        <section class="post-list" aria-label="게시글 목록">
+            {% for post in posts %}
+                <a class="post-row" href="{{ post.get_absolute_url }}">
+                    <h2 class="post-row__title">{{ post.title }}</h2>
+                    <div class="meta">작성: {{ post.created_at|date:"Y-m-d H:i" }}</div>
+                </a>
+            {% endfor %}
+        </section>
+    {% else %}
+        <section class="panel">
+            <p class="empty">아직 게시글이 없습니다.</p>
+            <div class="actions">
+                <a class="button" href="{% url 'posts:create' %}">첫 글 작성</a>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

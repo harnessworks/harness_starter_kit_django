@@ -1,6 +1,11 @@
 # Domain Glossary
 
-No product domain terms existed at adoption time.
+## Post
 
-Add terms here when the project gains business concepts, workflows, user roles,
-or invariants that agents should preserve during code changes.
+A public board entry with a title, body content, creation timestamp, and update
+timestamp.
+
+## 게시판
+
+The public CRUD surface for posts. It currently has no authentication or author
+ownership model.

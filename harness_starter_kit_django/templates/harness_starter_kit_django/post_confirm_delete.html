@@ -1,0 +1,17 @@
+{% extends "harness_starter_kit_django/base.html" %}
+
+{% block title %}게시글 삭제{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h1 class="page-title">게시글 삭제</h1>
+        <p><strong>{{ post.title }}</strong> 글을 삭제할까요?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="actions">
+                <button class="button--danger" type="submit">삭제</button>
+                <a class="button button--secondary" href="{{ post.get_absolute_url }}">취소</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}
