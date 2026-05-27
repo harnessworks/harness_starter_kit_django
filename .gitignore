@@ -1,0 +1,27 @@
+# Local reference clone used during harness adoption.
+harness-starter-kit/
+
+# Python and Django local artifacts.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+db.sqlite3
+db.sqlite3-journal
+
+# Virtual environments.
+.venv/
+venv/
+env/
+
+# Build and local editor noise.
+build/
+dist/
+*.egg-info/
+.idea/
+.vscode/
+*.bak
