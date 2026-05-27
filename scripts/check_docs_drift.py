@@ -26,6 +26,7 @@ OPTIONAL_REFERENCES = {
     "CLAUDE.md",
     "CONTRIBUTING.md",
     "README.md",
+    ".harness/source.json",
     ".venv",
     ".venv/",
     "db.sqlite3",

@@ -148,7 +148,8 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
   `.gitignore` entry is still useful protection during future harness reviews.
 - Add real models, views, URLs, templates, or tests to
   `harness_starter_kit_django/` when the app's domain responsibility is known.
-- Add CI after the repository has settled on where it will be hosted.
+- CI was added later in `.github/workflows/harness-check.yml`; see
+  `docs/harness/harness-update-report.md` for the update record.
 
 ## Notes For Future Agents
 

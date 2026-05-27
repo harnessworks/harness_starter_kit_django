@@ -73,6 +73,7 @@ of adding parallel command docs.
 
 Before making architecture, command, or framework changes, inspect:
 
+- `.harness/source.json`
 - `docs/decisions/`
 - `docs/failures/`
 - `docs/conventions/`
@@ -81,6 +82,22 @@ Before making architecture, command, or framework changes, inspect:
 Add a short decision record when changing the Django project layout, database
 policy, test runner, formatter, linter, CI provider, or deployment assumptions.
 Add a failure note only when an attempted approach should not be repeated.
+
+When refreshing this repository against a newer `harness-starter-kit`, update
+`.harness/source.json` and add a short update report under `docs/harness/`.
+
+## Commit And PR Rules
+
+- Keep each commit focused on one logical change.
+- Before committing, inspect `git status` and the staged diff.
+- Do not commit local reference clones, virtual environments, dependency
+  directories, caches, local databases, secrets, credentials, or
+  machine-specific config.
+- Run `.\.venv\Scripts\python.exe scripts\check_harness.py` before committing
+  when Python and the virtual environment are available.
+- Use a clear imperative commit subject that describes the change.
+- PR descriptions should summarize changed files, checks run, assumptions,
+  remaining risks, and any manual follow-up.
 
 ## Forbidden Actions
 
