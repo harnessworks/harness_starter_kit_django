@@ -63,6 +63,17 @@
             font-weight: 700;
         }
 
+        .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-label {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
         .page {
             padding: 32px 0 48px;
         }
@@ -154,6 +165,18 @@
             background: var(--danger);
         }
 
+        .button--link {
+            border-color: transparent;
+            background: transparent;
+            color: var(--accent);
+            padding: 0;
+        }
+
+        .button--link:hover {
+            background: transparent;
+            text-decoration: underline;
+        }
+
         label {
             display: block;
             margin-bottom: 6px;
@@ -189,7 +212,18 @@
     <header class="site-header">
         <div class="site-header__inner">
             <a class="brand" href="{% url 'posts:list' %}">게시판</a>
-            <a class="button" href="{% url 'posts:create' %}">새 글</a>
+            <nav class="site-nav" aria-label="사용자 메뉴">
+                {% if user.is_authenticated %}
+                    <span class="user-label">{{ user.username }}</span>
+                    <a class="button" href="{% url 'posts:create' %}">새 글</a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="button--link" type="submit">로그아웃</button>
+                    </form>
+                {% else %}
+                    <a class="button" href="{% url 'login' %}">로그인</a>
+                {% endif %}
+            </nav>
         </div>
     </header>
     <main class="page">

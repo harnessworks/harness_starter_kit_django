@@ -5,6 +5,6 @@ from .models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "created_at", "updated_at")
-    search_fields = ("title", "content")
+    list_display = ("title", "owner", "created_at", "updated_at")
+    search_fields = ("title", "content", "owner__username")
     list_filter = ("created_at", "updated_at")

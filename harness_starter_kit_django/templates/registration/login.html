@@ -1,0 +1,30 @@
+{% extends "harness_starter_kit_django/base.html" %}
+
+{% block title %}로그인{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h1 class="page-title">로그인</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+            {{ form.non_field_errors }}
+            <div class="field">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+            <div class="field">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+            <div class="actions">
+                <button type="submit">로그인</button>
+                <a class="button button--secondary" href="{% url 'posts:list' %}">취소</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

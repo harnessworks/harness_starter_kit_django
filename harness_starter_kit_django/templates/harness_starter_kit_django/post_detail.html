@@ -6,6 +6,8 @@
     <article class="panel">
         <h1 class="page-title">{{ post.title }}</h1>
         <p class="meta">
+            작성자: {% if post.owner %}{{ post.owner.username }}{% else %}알 수 없음{% endif %}
+            ·
             작성: {{ post.created_at|date:"Y-m-d H:i" }}
             {% if post.updated_at != post.created_at %}
                 · 수정: {{ post.updated_at|date:"Y-m-d H:i" }}
@@ -14,8 +16,10 @@
         <div class="content">{{ post.content }}</div>
         <div class="actions">
             <a class="button button--secondary" href="{% url 'posts:list' %}">목록</a>
-            <a class="button" href="{% url 'posts:update' post.pk %}">수정</a>
-            <a class="button button--danger" href="{% url 'posts:delete' post.pk %}">삭제</a>
+            {% if user.is_authenticated and post.owner == user %}
+                <a class="button" href="{% url 'posts:update' post.pk %}">수정</a>
+                <a class="button button--danger" href="{% url 'posts:delete' post.pk %}">삭제</a>
+            {% endif %}
         </div>
     </article>
 {% endblock %}
