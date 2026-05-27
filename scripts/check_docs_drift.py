@@ -36,6 +36,9 @@ OPTIONAL_REFERENCES = {
     "manage.py",
 }
 OPTIONAL_PREFIXES = (
+    ".venv/",
+    "venv/",
+    "env/",
     ".mypy_cache/",
     ".pytest_cache/",
     ".ruff_cache/",
@@ -133,19 +136,22 @@ def is_ignored_reference(reference: str) -> bool:
 
 
 def looks_like_command(reference: str) -> bool:
-    command_roots = {"python", "pytest", "ruff", "mypy", "pre-commit"}
+    command_roots = {
+        "python",
+        "python.exe",
+        "pytest",
+        "ruff",
+        "mypy",
+        "pre-commit",
+    }
     try:
         first = shlex.split(reference, posix=False)[0]
     except (IndexError, ValueError):
         return False
 
-    normalized = first.strip("\"'").replace("\\", "/").lower()
-    return (
-        first in command_roots
-        or normalized in {".venv/scripts/python.exe", ".venv/bin/python"}
-        or normalized.endswith("/python.exe")
-        or normalized.endswith("/python")
-    )
+    normalized = normalize(first)
+    command_name = Path(normalized).name.lower()
+    return first in command_roots or command_name in command_roots
 
 
 def looks_like_path(reference: Reference) -> bool:

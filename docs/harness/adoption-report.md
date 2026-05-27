@@ -97,6 +97,13 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
 - `docs/domain/glossary.md`: Added the domain knowledge-store entrypoint.
 - `docs/failures/README.md`: Added the failure-memory entrypoint.
 
+## Failure Memory
+
+- Recorded during adoption: None; no failed CI run or repeated project-specific
+  mistake existed at initial adoption time.
+- First recorded failure after CI adoption:
+  `docs/failures/0001-docs-drift-windows-venv-command.md`.
+
 ## Profile Absorption
 
 - Profile reviewed: Django.

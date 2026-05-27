@@ -1,35 +1,46 @@
-# 0001. Docs Drift Treated Windows Venv Commands As Paths
+# 0001: Docs Drift Check Misread Windows Venv Commands
 
-## Date Tried
+## Status
 
-2026-05-27
+Resolved
 
-## Goal
+## Context
 
-Document local verification commands in README and harness docs without causing
-cross-platform docs drift failures.
+GitHub Actions failed after CI was added for the harness. The failing command
+was:
 
-## What Was Tried
+```powershell
+python scripts/check_harness.py
+```
 
-Windows virtual-environment commands such as
-`.\.venv\Scripts\python.exe manage.py check` and
-`.\.venv\Scripts\python.exe scripts\check_harness.py` were documented as inline
-code.
+The failure happened inside `scripts/check_docs_drift.py`.
 
-## Why It Failed
+## Symptoms
 
-The docs drift checker can run on non-Windows environments. A Windows venv
-Python path can look like a local file reference instead of a command when the
-checker only sees inline code, which may create a false missing-path failure.
+The CI log reported missing paths for documented PowerShell commands:
 
-## Current Replacement
+```text
+Missing referenced path in docs/decisions/0002-initialize-django-config-project.md: .\.venv\Scripts\python.exe
+Missing referenced path in docs/harness/adoption-report.md: .\.venv\Scripts\python.exe
+```
 
-Treat virtual-environment Python paths as commands or ignored local environment
-paths in harness docs drift checks. Keep verification commands documented, but
-do not rely on local `.venv/` paths existing in CI.
+## Root Cause
 
-## Agent Guidance
+The docs drift checker treated inline Windows virtual-environment commands as
+file references. That passed locally on Windows because
+`.\.venv\Scripts\python.exe` existed, but failed in Linux CI where that path is
+not present.
 
-When a check fails because a command is misclassified as a path, fix the checker
-and add a regression test. Do not remove useful verification commands from docs
-just to silence docs drift.
+## Resolution
+
+Update `scripts/check_docs_drift.py` so documented Python executable commands
+such as `.\.venv\Scripts\python.exe ...` and `.venv/bin/python ...` are treated
+as commands, not required file references.
+
+## Prevention
+
+- Keep cross-platform command examples in docs.
+- When fixing a failed harness check, add a failure note unless the failure is
+  purely transient.
+- Prefer drift-check logic that recognizes commands by executable name rather
+  than by host-specific path existence.

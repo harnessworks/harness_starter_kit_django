@@ -3,10 +3,9 @@
 ## Kit Source
 
 - URL: `https://github.com/baskduf/harness-starter-kit`
-- Previous commit: Unknown in target tracking; local reference clone was at
-  `775f513` before the update.
-- Current commit: `b291ae74eb7ae80415f277ac99c37a818ef21200`
-- Reference clone state: Clean and fast-forwarded from `775f513` to `b291ae7`.
+- Previous commit: `b291ae74eb7ae80415f277ac99c37a818ef21200`
+- Current commit: `f03a3384d280e2d32bab0fb782110ae4af069d45`
+- Reference clone state: Clean and fast-forwarded from `b291ae7` to `f03a338`.
 
 ## Target State
 
@@ -18,15 +17,15 @@
 
 ## Applied
 
-- Created `.harness/source.json` to record the starter-kit source commit.
-- Added `.github/workflows/harness-check.yml` to run the existing local harness
-  verification command in GitHub Actions.
-- Added commit and PR hygiene rules to `AGENTS.md`.
-- Updated README harness output map to include source tracking and CI.
-- Added decision record
-  `docs/decisions/0005-track-harness-source-and-ci.md`.
-- Updated `scripts/check_docs_drift.py` so source tracking references are known
-  harness metadata.
+- Updated `.harness/source.json` from the previous starter-kit commit to
+  `f03a3384d280e2d32bab0fb782110ae4af069d45`.
+- Added an explicit failure-memory rule to `AGENTS.md` for failed CI runs,
+  failed harness checks, repeated agent mistakes, and cross-environment
+  mismatches.
+- Recorded the prior CI docs-drift failure in
+  `docs/failures/0001-docs-drift-windows-venv-command.md`.
+- Updated `scripts/check_docs_drift.py` to align with the latest starter-kit
+  command detection approach for virtual-environment Python commands.
 
 ## Skipped
 
@@ -36,6 +35,9 @@
   useful future candidates but would introduce new tools beyond this refresh.
 - Did not copy the starter-kit internal GitHub Actions workflow because it is
   for testing the kit itself, not this Django project.
+- Did not copy the starter kit validation page. This target already
+  documents local validation in README and harness reports; a target-specific
+  validation page can be added later if the workflow grows.
 
 ## Manual Review
 
@@ -47,11 +49,20 @@
 
 ## Checks Run
 
-- `.\.venv\Scripts\python.exe scripts\check_harness.py`: Passed after
-  adjusting this report so branch tracking text is not mistaken for a file path.
+- `wsl bash -lc "cd /mnt/c/Users/SSAFY/Desktop/django && python3 scripts/check_docs_drift.py"`:
+  Passed.
+- `.\.venv\Scripts\python.exe scripts\check_docs_drift.py`: Passed.
+- `.\.venv\Scripts\python.exe scripts\check_harness.py`: Passed.
 - `.\.venv\Scripts\python.exe harness-starter-kit\scripts\harness_doctor.py --target .`:
   Passed with an automated baseline score of 83/100, grade B+.
 
+## Failure Memory
+
+- Recorded: `docs/failures/0001-docs-drift-windows-venv-command.md`
+- Skipped: None. This update was directly motivated by a failed CI run and a
+  cross-environment docs drift mismatch.
+
 ## Source Tracking
 
-- `.harness/source.json`: Created.
+- `.harness/source.json`: Updated to
+  `f03a3384d280e2d32bab0fb782110ae4af069d45`.
