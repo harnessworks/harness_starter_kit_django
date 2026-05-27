@@ -3,54 +3,51 @@
 ## Kit Source
 
 - URL: `https://github.com/baskduf/harness-starter-kit`
-- Previous commit: `b291ae74eb7ae80415f277ac99c37a818ef21200`
-- Current commit: `f03a3384d280e2d32bab0fb782110ae4af069d45`
-- Reference clone state: Clean and fast-forwarded from `b291ae7` to `f03a338`.
+- Previous commit: `f03a3384d280e2d32bab0fb782110ae4af069d45`
+- Current commit: `aa32432dd70759d9a822fdbdf4593a622cc1d37e`
+- Reference clone state: Clean and fast-forwarded from `f03a338` to `aa32432`.
 
 ## Target State
 
 - Branch/status before update: main tracking origin/main, clean.
 - Existing harness files reviewed: `AGENTS.md`, `README.md`,
   `docs/harness/adoption-report.md`, `docs/conventions/coding.md`,
-  `scripts/check_harness.py`, `scripts/check_docs_drift.py`,
-  `scripts/check_structure.py`, and current Django tests.
+  `docs/domain/glossary.md`, `docs/failures/`,
+  `.github/workflows/harness-check.yml`, `scripts/check_harness.py`,
+  `scripts/check_docs_drift.py`, `scripts/check_structure.py`, and current
+  Django tests.
 
 ## Applied
 
 - Updated `.harness/source.json` from the previous starter-kit commit to
-  `f03a3384d280e2d32bab0fb782110ae4af069d45`.
-- Added an explicit failure-memory rule to `AGENTS.md` for failed CI runs,
-  failed harness checks, repeated agent mistakes, and cross-environment
-  mismatches.
-- Recorded the prior CI docs-drift failure in
-  `docs/failures/0001-docs-drift-windows-venv-command.md`.
+  `aa32432dd70759d9a822fdbdf4593a622cc1d37e`.
 - Updated `scripts/check_docs_drift.py` to align with the latest starter-kit
-  command detection approach for virtual-environment Python commands.
+  placeholder handling by treating `...` as a placeholder token rather than a
+  required local path.
 
 ## Skipped
 
 - Did not copy starter-kit templates wholesale; the current Django project
   already has tailored `AGENTS.md`, docs, and scripts.
-- Did not add Ruff, mypy, pre-commit, import-linter, or vulture. Those remain
-  useful future candidates but would introduce new tools beyond this refresh.
-- Did not copy the starter-kit internal GitHub Actions workflow because it is
-  for testing the kit itself, not this Django project.
-- Did not copy the starter kit validation page. This target already
-  documents local validation in README and harness reports; a target-specific
-  validation page can be added later if the workflow grows.
+- Did not copy starter-kit `harness_doctor.py` into this target. The doctor is
+  run from the local reference clone and remains reference tooling rather than
+  application source.
+- Did not copy starter-kit test files for the kit itself; this target keeps its
+  own Django tests and local harness wrapper.
+- Did not duplicate the starter-kit failure note because this target already
+  has `docs/failures/0001-docs-drift-windows-venv-command.md` for the same
+  class of cross-environment docs drift failure.
 
 ## Manual Review
 
 - Decide later whether to add Ruff or mypy as explicit project tooling.
-- Add architecture-boundary checks after the app grows beyond one small CRUD
-  surface.
+- Add architecture-boundary checks only if the app grows beyond the current
+  small CRUD surface.
 - Add real failure records under `docs/failures/` when repeated mistakes or
   rejected approaches appear.
 
 ## Checks Run
 
-- `wsl bash -lc "cd /mnt/c/Users/SSAFY/Desktop/django && python3 scripts/check_docs_drift.py"`:
-  Passed.
 - `.\.venv\Scripts\python.exe scripts\check_docs_drift.py`: Passed.
 - `.\.venv\Scripts\python.exe scripts\check_harness.py`: Passed.
 - `.\.venv\Scripts\python.exe harness-starter-kit\scripts\harness_doctor.py --target .`:
@@ -58,11 +55,13 @@
 
 ## Failure Memory
 
-- Recorded: `docs/failures/0001-docs-drift-windows-venv-command.md`
-- Skipped: None. This update was directly motivated by a failed CI run and a
-  cross-environment docs drift mismatch.
+- Recorded: none.
+- Skipped: This update was a proactive kit refresh, not a response to a failed
+  CI run, failed harness check, repeated agent mistake, or new
+  cross-environment mismatch. The existing failure note already covers the
+  related docs drift false-positive class.
 
 ## Source Tracking
 
 - `.harness/source.json`: Updated to
-  `f03a3384d280e2d32bab0fb782110ae4af069d45`.
+  `aa32432dd70759d9a822fdbdf4593a622cc1d37e`.

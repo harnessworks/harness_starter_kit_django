@@ -48,6 +48,7 @@ OPTIONAL_PREFIXES = (
 
 BACKTICK_RE = re.compile(r"`([^`\n]+)`")
 MARKDOWN_LINK_RE = re.compile(r"(?<!!)\[[^\]\n]+\]\(([^)\n]+)\)")
+PLACEHOLDER_TOKENS = ("*", "...", "<", ">", "{{", "}}")
 
 
 @dataclass(frozen=True)
@@ -119,7 +120,7 @@ def normalize(reference: str) -> str:
 def is_ignored_reference(reference: str) -> bool:
     if is_external(reference) or reference.strip().startswith("#"):
         return True
-    if any(token in reference for token in ("*", "<", ">", "{{", "}}")):
+    if any(token in reference for token in PLACEHOLDER_TOKENS):
         return True
 
     normalized = normalize(reference)
