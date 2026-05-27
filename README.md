@@ -27,6 +27,7 @@ Django 게시판 프로젝트입니다. 현재 기능은 공개 읽기 게시판
 |-- .github/workflows/              # CI harness checks
 |-- .harness/                       # Harness source tracking
 |-- docs/                           # Harness knowledge store
+|-- evaulation/                     # Harness impact evaluation
 |-- scripts/                        # Local harness verification scripts
 |-- AGENTS.md                       # Agent instructions
 |-- manage.py
@@ -68,6 +69,7 @@ flowchart TD
 
     F --> F1["docs/harness/adoption-report.md"]
     F --> F2["docs/harness/harness-update-report.md"]
+    F --> F3["evaulation/harness-impact.md"]
 
     G --> G1[".harness/source.json"]
 
@@ -89,4 +91,11 @@ flowchart TD
 | Harness source | [.harness/source.json](.harness/source.json) | 이 저장소가 참조한 최신 Harness Starter Kit commit 기록 |
 | CI harness check | [.github/workflows/harness-check.yml](.github/workflows/harness-check.yml) | GitHub Actions에서 local harness checks 자동 실행 |
 | Update report | [docs/harness/harness-update-report.md](docs/harness/harness-update-report.md) | 최신 kit 기준으로 무엇을 적용/보류했는지 기록 |
+| Impact evaluation | [evaulation/harness-impact.md](evaulation/harness-impact.md) | Harness Kit이 이 프로젝트에 만든 실질적 효과와 한계 평가 |
+
+## Harness Kit 효과 평가
+
+이 저장소에서 Harness Kit은 앱 기능 자체보다 협업 규칙, 검증 루프, 결정 기록,
+실패 기억, 업데이트 추적을 남기는 데 유의미한 효과를 냈습니다. 자세한 평가는
+[evaulation/harness-impact.md](evaulation/harness-impact.md)에 기록했습니다.
 
