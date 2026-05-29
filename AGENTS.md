@@ -89,6 +89,25 @@ failure is purely transient.
 When refreshing this repository against a newer `harness-starter-kit`, update
 `.harness/source.json` and add a short update report under `docs/harness/`.
 
+## Project Analysis Rule
+
+When asked to analyze, review, summarize, onboard to, or explain this project,
+inspect these first when they exist:
+
+- `README.md`
+- `AGENTS.md`
+- `.harness/source.json`
+- `docs/decisions/`
+- `docs/conventions/`
+- `docs/domain/`
+- `docs/failures/`
+- `scripts/check_harness.py`
+- `scripts/check_*.py`
+
+Then summarize the project in terms of structure, current behavior, tests,
+documentation, known decisions, known failures, drift checks, and recommended
+next work.
+
 ## Commit And PR Rules
 
 - Keep each commit focused on one logical change.

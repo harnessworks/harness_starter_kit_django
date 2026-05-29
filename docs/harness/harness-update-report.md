@@ -3,66 +3,66 @@
 ## Kit Source
 
 - URL: `https://github.com/baskduf/harness-starter-kit`
-- Previous commit: `aa32432dd70759d9a822fdbdf4593a622cc1d37e`
-- Current commit: `026920b5fd3884960764e3196ead389961db41b6`
-- Reference clone state: Clean and fast-forwarded from `aa32432` to `026920b`.
+- Previous commit: `026920b5fd3884960764e3196ead389961db41b6`
+- Current commit: `cffcaece3a662a5737a2bcd5651a61e46c5b5b80`
+- Reference clone state: Clean and fast-forwarded from `026920b` to `cffcaec`.
 
 ## Target State
 
-- Branch/status before update: main tracking origin/main, clean.
-- Existing harness files reviewed: `AGENTS.md`, `README.md`,
-  `docs/harness/adoption-report.md`, `docs/conventions/coding.md`,
-  `docs/domain/glossary.md`, `docs/failures/`,
-  `.github/workflows/harness-check.yml`, `scripts/check_harness.py`,
-  `scripts/check_docs_drift.py`, `scripts/check_structure.py`, and current
-  Django tests. New kit guidance reviewed: encoding hygiene check, Django
-  profile priority notes, commit convention guidance, Android profile, and
-  broader adoption workflow notes.
+- Branch/status before update: `main` tracking the origin main branch, clean.
+- Existing harness files reviewed: `AGENTS.md`, `.harness/source.json`,
+  `docs/decisions/`, `docs/conventions/`, `docs/domain/`, `docs/failures/`,
+  `docs/harness/`, `.github/workflows/harness-check.yml`, and local scripts.
+- New kit guidance reviewed: project analysis rule, OSS hygiene files,
+  profile README consistency checks, docs drift optional references, and
+  updated doctor baseline wording.
 
 ## Applied
 
-- Updated `.harness/source.json` from the previous starter-kit commit to
-  `026920b5fd3884960764e3196ead389961db41b6`.
-- Added `scripts/check_encoding_hygiene.py` and wired it into
-  `scripts/check_harness.py` to detect invalid UTF-8 and common mojibake
-  markers in localized project text files.
-- Updated `scripts/check_docs_drift.py` with the latest optional generated path
-  references from the starter kit.
-- Updated `AGENTS.md` to make Conventional Commits the explicit commit subject
-  rule for this repository.
-- Updated `README.md` to include the encoding hygiene check in the harness
-  artifact map.
+- Updated `.harness/source.json` to track
+  `cffcaece3a662a5737a2bcd5651a61e46c5b5b80`.
+- Added the starter kit's project analysis rule to `AGENTS.md` so ordinary
+  requests such as "analyze this project" direct agents through `README.md`,
+  `.harness/source.json`, decisions, conventions, domain docs, failure notes,
+  and local harness scripts before summarizing.
+- Added `.gitattributes` with LF text normalization and binary image handling
+  from the starter kit's OSS hygiene update.
+- Updated `README.md` to describe this repository as a Harness dogfood project,
+  include the project analysis rule in the artifact map, and record the recent
+  analysis-quality observation.
+- Refreshed this update report with the latest applied and skipped items.
 
 ## Skipped
 
-- Did not copy starter-kit templates wholesale; the current Django project
-  already has tailored `AGENTS.md`, docs, and scripts.
-- Did not copy starter-kit `harness_doctor.py` into this target. The doctor is
-  run from the local reference clone and remains reference tooling rather than
-  application source.
-- Did not copy starter-kit test files for the kit itself; this target keeps its
-  own Django tests and local harness wrapper.
-- Did not adopt Android profile files, mobile checklists, site assets, or
-  starter-kit website changes because they are reference-only for this Django
-  target.
+- Did not copy issue templates, pull request template, `CONTRIBUTING.md`,
+  `CODE_OF_CONDUCT.md`, `SECURITY.md`, or `CHANGELOG.md`. They are useful OSS
+  hygiene defaults, but this target has not chosen a public contribution
+  workflow yet.
+- Did not copy starter-kit profile maintenance docs or profile consistency
+  tests because this Django target does not maintain reusable kit profiles.
+- Did not copy starter-kit `harness_doctor.py` into this target. The doctor
+  remains reference tooling run from the local `harness-starter-kit/` clone.
+- Did not overwrite local drift scripts wholesale; the current scripts are
+  already tailored to this Django repository.
 - Did not add a new failure note because this update was proactive and did not
-  fix a failed local check or CI run.
+  fix a failed CI run, failed harness check, repeated agent mistake, or
+  cross-environment mismatch.
 
 ## Manual Review
 
-- Decide later whether to add Ruff or mypy as explicit project tooling.
-- Add architecture-boundary checks only if the app grows beyond the current
-  small CRUD surface.
-- Add real failure records under `docs/failures/` when repeated mistakes or
-  rejected approaches appear.
+- Decide later whether this repository should adopt public OSS files such as
+  `CONTRIBUTING.md`, `SECURITY.md`, and issue/PR templates.
+- Decide later whether to rename `evaulation/` to evaluation; that spelling
+  cleanup touches documented paths and should be handled as its own change.
+- Keep using decision records for architecture, database, test runner,
+  formatter, linter, CI, and deployment assumptions.
 
 ## Checks Run
 
-- `.\.venv\Scripts\python.exe scripts\check_encoding_hygiene.py`: Passed.
-- `.\.venv\Scripts\python.exe scripts\check_docs_drift.py`: Passed.
 - `.\.venv\Scripts\python.exe scripts\check_harness.py`: Passed.
 - `.\.venv\Scripts\python.exe harness-starter-kit\scripts\harness_doctor.py --target .`:
   Passed with an automated baseline score of 83/100, grade B+.
+- `git diff --check`: Passed.
 
 ## Failure Memory
 
@@ -74,4 +74,4 @@
 ## Source Tracking
 
 - `.harness/source.json`: Updated to
-  `026920b5fd3884960764e3196ead389961db41b6`.
+  `cffcaece3a662a5737a2bcd5651a61e46c5b5b80`.
