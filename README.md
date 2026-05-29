@@ -10,7 +10,7 @@ The current app implements public post CRUD, search, pagination, and comments
 with Django models, forms, class-based views, authentication, templates, tests,
 and migrations.
 
-https://velog.io/@ssafy_elonmusk/%ED%95%98%EB%84%A4%EC%8A%A4-%EC%97%94%EC%A7%80%EB%8B%88%EC%96%B4%EB%A7%81-Harness-Engineering-%EC%9D%B4%EB%9E%80
+[BLOG](https://dev.to/baskduf/i-stopped-prompt-engineering-my-ai-coding-agent-i-started-engineering-the-repo-instead-1i3e)
 
 ## Features
 
