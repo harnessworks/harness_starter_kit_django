@@ -98,7 +98,8 @@ When refreshing this repository against a newer `harness-starter-kit`, update
   machine-specific config.
 - Run `.\.venv\Scripts\python.exe scripts\check_harness.py` before committing
   when Python and the virtual environment are available.
-- Use a clear imperative commit subject that describes the change.
+- Use Conventional Commits for commit subjects, such as `feat:`, `fix:`,
+  `docs:`, `test:`, `refactor:`, or `chore:`.
 - PR descriptions should summarize changed files, checks run, assumptions,
   remaining risks, and any manual follow-up.
 

@@ -77,6 +77,7 @@ flowchart TD
     D --> D1["scripts/check_docs_drift.py"]
     D --> D2["scripts/check_structure.py"]
     D --> D3["scripts/check_effectiveness_plan.py"]
+    D --> D4["scripts/check_encoding_hygiene.py"]
 
     E --> E1["scripts/check_harness.py"]
     E --> E2["harness_starter_kit_django/tests.py"]
@@ -101,6 +102,7 @@ flowchart TD
 | Harness wrapper | [scripts/check_harness.py](scripts/check_harness.py) | 문서 drift, 구조 drift, Django check/test 통합 실행 |
 | Docs drift check | [scripts/check_docs_drift.py](scripts/check_docs_drift.py) | README와 docs의 깨진 로컬 참조 탐지 |
 | Structure check | [scripts/check_structure.py](scripts/check_structure.py) | 임시 파일, 백업 파일, drift-prone 파일 탐지 |
+| Encoding hygiene check | [scripts/check_encoding_hygiene.py](scripts/check_encoding_hygiene.py) | UTF-8 오류와 흔한 한글 깨짐 흔적 탐지 |
 | Effectiveness check | [scripts/check_effectiveness_plan.py](scripts/check_effectiveness_plan.py) | adoption/effectiveness report의 측정 계획 누락 탐지 |
 | Harness source | [.harness/source.json](.harness/source.json) | 이 저장소가 참조한 최신 Harness Starter Kit commit 기록 |
 | CI harness check | [.github/workflows/harness-check.yml](.github/workflows/harness-check.yml) | GitHub Actions에서 local harness checks 자동 실행 |

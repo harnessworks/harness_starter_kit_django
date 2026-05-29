@@ -30,6 +30,7 @@ def main() -> int:
     python = project_python()
     run([python, "scripts/check_docs_drift.py"])
     run([python, "scripts/check_structure.py"])
+    run([python, "scripts/check_encoding_hygiene.py"])
     run([python, "scripts/check_effectiveness_plan.py", "--require-report"])
 
     manage_py = ROOT / "manage.py"
