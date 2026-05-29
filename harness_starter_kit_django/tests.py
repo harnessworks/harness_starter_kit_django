@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Post
+from .models import Comment, Post
 
 
 User = get_user_model()
@@ -14,6 +14,17 @@ class PostModelTests(TestCase):
         post = Post.objects.create(title="첫 게시글", content="내용입니다.")
 
         self.assertEqual(str(post), "첫 게시글")
+
+    def test_comment_string_uses_content_preview(self):
+        post = Post.objects.create(title="댓글 게시글", content="본문")
+        user = User.objects.create_user(username="commenter", password="password123")
+        comment = Comment.objects.create(
+            post=post,
+            owner=user,
+            content="댓글 내용입니다.",
+        )
+
+        self.assertEqual(str(comment), "댓글 내용입니다.")
 
 
 class PostCrudViewTests(TestCase):
@@ -30,6 +41,31 @@ class PostCrudViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "목록 게시글")
+
+    def test_post_list_filters_by_query(self):
+        Post.objects.create(title="검색 대상", content="목록 내용", owner=self.user)
+        Post.objects.create(title="다른 게시글", content="다른 내용", owner=self.user)
+
+        response = self.client.get(reverse("posts:list"), {"q": "검색"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "검색 대상")
+        self.assertNotContains(response, "다른 게시글")
+
+    def test_post_list_is_paginated(self):
+        for index in range(6):
+            Post.objects.create(
+                title=f"페이지 게시글 {index}",
+                content="페이지 내용",
+                owner=self.user,
+            )
+
+        response = self.client.get(reverse("posts:list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["is_paginated"])
+        self.assertEqual(len(response.context["posts"]), 5)
+        self.assertContains(response, "다음")
 
     def test_anonymous_user_is_redirected_from_create(self):
         response = self.client.get(reverse("posts:create"))
@@ -100,6 +136,88 @@ class PostCrudViewTests(TestCase):
         self.assertTrue(Post.objects.filter(pk=post.pk).exists())
 
 
+class CommentViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="writer", password="password123")
+        self.other_user = User.objects.create_user(
+            username="other",
+            password="password123",
+        )
+        self.post = Post.objects.create(
+            title="댓글 게시글",
+            content="댓글 본문",
+            owner=self.user,
+        )
+
+    def test_post_detail_shows_comments(self):
+        Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="보이는 댓글",
+        )
+
+        response = self.client.get(self.post.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "보이는 댓글")
+        self.assertContains(response, self.other_user.username)
+
+    def test_anonymous_user_is_redirected_from_comment_create(self):
+        url = reverse("posts:comment_create", kwargs={"post_pk": self.post.pk})
+
+        response = self.client.post(url, {"content": "익명 댓글"})
+
+        self.assertRedirects(
+            response,
+            f"{reverse('login')}?next={url}",
+            fetch_redirect_response=False,
+        )
+        self.assertFalse(Comment.objects.filter(content="익명 댓글").exists())
+
+    def test_create_comment_assigns_owner_and_post(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.post(
+            reverse("posts:comment_create", kwargs={"post_pk": self.post.pk}),
+            {"content": "새 댓글"},
+        )
+
+        comment = Comment.objects.get(content="새 댓글")
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertEqual(comment.post, self.post)
+        self.assertEqual(comment.owner, self.other_user)
+
+    def test_owner_can_delete_comment(self):
+        self.client.force_login(self.other_user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="삭제할 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_delete", kwargs={"pk": comment.pk})
+        )
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertFalse(Comment.objects.filter(pk=comment.pk).exists())
+
+    def test_other_user_cannot_delete_comment(self):
+        self.client.force_login(self.user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="남의 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_delete", kwargs={"pk": comment.pk})
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(Comment.objects.filter(pk=comment.pk).exists())
+
+
 class AdminSiteTests(TestCase):
     def setUp(self):
         self.admin_user = User.objects.create_superuser(
@@ -118,7 +236,7 @@ class AdminSiteTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "게시판 관리자")
-        self.assertContains(response, "사용자 및 게시글 관리")
+        self.assertContains(response, "사용자, 게시글 및 댓글 관리")
 
     def test_builtin_user_admin_is_available(self):
         response = self.client.get(reverse("admin:auth_user_changelist"))
@@ -137,4 +255,16 @@ class AdminSiteTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "관리 게시글")
+        self.assertContains(response, self.writer.username)
+
+    def test_comment_admin_shows_owner_and_post(self):
+        post = Post.objects.create(title="댓글 관리 게시글", content="본문", owner=self.writer)
+        Comment.objects.create(post=post, content="관리 댓글", owner=self.writer)
+
+        response = self.client.get(
+            reverse("admin:harness_starter_kit_django_comment_changelist")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "댓글 관리 게시글")
         self.assertContains(response, self.writer.username)

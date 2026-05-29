@@ -21,5 +21,50 @@
                 <a class="button button--danger" href="{% url 'posts:delete' post.pk %}">삭제</a>
             {% endif %}
         </div>
+
+        <section class="comments" aria-label="댓글">
+            <h2>댓글 {{ post.comments.count }}</h2>
+
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'posts:comment_create' post.pk %}">
+                    {% csrf_token %}
+                    <div class="field">
+                        {{ comment_form.content.label_tag }}
+                        {{ comment_form.content }}
+                        {{ comment_form.content.errors }}
+                    </div>
+                    <button type="submit">댓글 작성</button>
+                </form>
+            {% else %}
+                <p class="empty">
+                    <a href="{% url 'login' %}?next={{ request.path }}">로그인</a>하면 댓글을 작성할 수 있습니다.
+                </p>
+            {% endif %}
+
+            {% if post.comments.all %}
+                <div class="comment-list">
+                    {% for comment in post.comments.all %}
+                        <article class="comment">
+                            <div class="meta">
+                                {{ comment.owner.username }}
+                                · {{ comment.created_at|date:"Y-m-d H:i" }}
+                                {% if comment.updated_at != comment.created_at %}
+                                    · 수정: {{ comment.updated_at|date:"Y-m-d H:i" }}
+                                {% endif %}
+                            </div>
+                            <p class="comment__body">{{ comment.content }}</p>
+                            {% if user.is_authenticated and comment.owner == user %}
+                                <form class="comment__delete" method="post" action="{% url 'posts:comment_delete' comment.pk %}">
+                                    {% csrf_token %}
+                                    <button class="button--link" type="submit">댓글 삭제</button>
+                                </form>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty">아직 댓글이 없습니다.</p>
+            {% endif %}
+        </section>
     </article>
 {% endblock %}

@@ -19,8 +19,8 @@ The Django project package is `config`, the root command entrypoint is
 - Keep app-specific code in `harness_starter_kit_django/` until another app
   boundary is intentionally added.
 - Use `harness_starter_kit_django` in imports and settings.
-- Keep board CRUD URLs in `harness_starter_kit_django/urls.py` under the
-  `posts` namespace.
+- Keep board CRUD and comment URLs in `harness_starter_kit_django/urls.py`
+  under the `posts` namespace.
 - Keep board templates under
   `harness_starter_kit_django/templates/harness_starter_kit_django/`.
 - Treat migrations as source after model changes; do not rewrite committed

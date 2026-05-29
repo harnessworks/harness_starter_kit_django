@@ -1,0 +1,18 @@
+{% extends "harness_starter_kit_django/base.html" %}
+
+{% block title %}댓글 삭제{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h1 class="page-title">댓글 삭제</h1>
+        <p>이 댓글을 삭제할까요?</p>
+        <p class="content">{{ comment.content }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="actions">
+                <button class="button--danger" type="submit">삭제</button>
+                <a class="button button--secondary" href="{{ comment.post.get_absolute_url }}">취소</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

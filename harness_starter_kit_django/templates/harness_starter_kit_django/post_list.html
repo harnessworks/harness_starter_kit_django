@@ -3,20 +3,51 @@
 {% block title %}게시글 목록{% endblock %}
 
 {% block content %}
-    <h1 class="page-title">게시글 목록</h1>
+    <div class="toolbar">
+        <h1 class="page-title">게시글 목록</h1>
+        <form class="search-form" method="get" action="{% url 'posts:list' %}">
+            <input type="search" name="q" value="{{ query }}" placeholder="제목, 내용, 작성자 검색" aria-label="게시글 검색">
+            <button type="submit">검색</button>
+            {% if query %}
+                <a class="button button--secondary" href="{% url 'posts:list' %}">초기화</a>
+            {% endif %}
+        </form>
+    </div>
 
     {% if posts %}
         <section class="post-list" aria-label="게시글 목록">
             {% for post in posts %}
                 <a class="post-row" href="{{ post.get_absolute_url }}">
                     <h2 class="post-row__title">{{ post.title }}</h2>
-                    <div class="meta">작성: {{ post.created_at|date:"Y-m-d H:i" }}</div>
+                    <div class="meta">
+                        작성자: {% if post.owner %}{{ post.owner.username }}{% else %}알 수 없음{% endif %}
+                        · 작성: {{ post.created_at|date:"Y-m-d H:i" }}
+                        · 댓글 {{ post.comment_count }}
+                    </div>
                 </a>
             {% endfor %}
         </section>
+
+        {% if is_paginated %}
+            <nav class="pagination" aria-label="게시글 페이지">
+                {% if page_obj.has_previous %}
+                    <a class="button button--secondary" href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}">이전</a>
+                {% endif %}
+                <span class="meta">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a class="button button--secondary" href="?{% if query %}q={{ query|urlencode }}&{% endif %}page={{ page_obj.next_page_number }}">다음</a>
+                {% endif %}
+            </nav>
+        {% endif %}
     {% else %}
         <section class="panel">
-            <p class="empty">아직 게시글이 없습니다.</p>
+            <p class="empty">
+                {% if query %}
+                    "{{ query }}"에 맞는 게시글이 없습니다.
+                {% else %}
+                    아직 게시글이 없습니다.
+                {% endif %}
+            </p>
             <div class="actions">
                 {% if user.is_authenticated %}
                     <a class="button" href="{% url 'posts:create' %}">첫 글 작성</a>

@@ -1,8 +1,9 @@
 # harness_starter_kit_django
 
 `harness_starter_kit_django`는 Harness Starter Kit을 적용해 만든 작은
-Django 게시판 프로젝트입니다. 현재 기능은 공개 읽기 게시판 CRUD이며, Django의
-모델, 폼, 클래스 기반 뷰, 인증, 템플릿, 테스트, 마이그레이션을 사용합니다.
+Django 게시판 프로젝트입니다. 현재 기능은 공개 읽기 게시판 CRUD, 검색,
+페이지네이션, 댓글이며, Django의 모델, 폼, 클래스 기반 뷰, 인증, 템플릿,
+테스트, 마이그레이션을 사용합니다.
 
 https://velog.io/@ssafy_elonmusk/%ED%95%98%EB%84%A4%EC%8A%A4-%EC%97%94%EC%A7%80%EB%8B%88%EC%96%B4%EB%A7%81-Harness-Engineering-%EC%9D%B4%EB%9E%80
 
@@ -13,12 +14,16 @@ https://velog.io/@ssafy_elonmusk/%ED%95%98%EB%84%A4%EC%8A%A4-%EC%97%94%EC%A7%80%
 - `/posts/<id>/`: 게시글 상세
 - `/posts/<id>/edit/`: 게시글 수정
 - `/posts/<id>/delete/`: 게시글 삭제
+- `/posts/<id>/comments/new/`: 댓글 작성
+- `/comments/<id>/delete/`: 댓글 삭제
 - `/accounts/login/`: 로그인
 - `/accounts/logout/`: 로그아웃
 - `/admin/`: Django 관리자
 
 게시글 목록과 상세는 공개이며, 작성은 로그인 사용자만 가능합니다. 수정과
-삭제는 게시글 작성자만 할 수 있습니다.
+삭제는 게시글 작성자만 할 수 있습니다. 목록은 제목, 내용, 작성자 기준 검색과
+페이지네이션을 제공합니다. 댓글은 로그인 사용자만 작성할 수 있고, 삭제는 댓글
+작성자만 할 수 있습니다.
 
 ## 관리자
 
@@ -29,8 +34,10 @@ Django 관리자 페이지는 `/admin/`에서 사용할 수 있습니다. 관리
 .\.venv\Scripts\python.exe manage.py createsuperuser
 ```
 
-관리자는 `/admin/`에서 사용자, 그룹, 게시글을 관리할 수 있습니다. 게시글 관리
-화면은 작성자, 작성일, 수정일 기준 필터와 제목/내용/작성자 검색을 제공합니다.
+관리자는 `/admin/`에서 사용자, 그룹, 게시글, 댓글을 관리할 수 있습니다. 게시글
+관리 화면은 작성자, 작성일, 수정일 기준 필터와 제목/내용/작성자 검색을
+제공합니다. 댓글 관리 화면은 게시글, 작성자, 작성일, 수정일 기준 관리를
+지원합니다.
 
 ## 프로젝트 구조
 
