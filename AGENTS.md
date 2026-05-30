@@ -10,6 +10,19 @@ Treat the current repository root as the project root. Treat
 `harness-starter-kit/` as local reference material only; do not edit it as part
 of normal project work.
 
+## Harness Command Routing
+
+- `/harness doctor`: use `harness-starter-kit/commands/harness-doctor.md` when
+  the local reference clone exists. Inspect and report only; do not modify
+  target files.
+- `/harness update`: use `harness-starter-kit/commands/harness-update.md`.
+  Refresh the reference clone, compare it with `.harness/source.json`, apply
+  only target-appropriate harness updates, then update source tracking and the
+  harness update report.
+- `/harness refresh`: use `harness-starter-kit/commands/harness-refresh.md`.
+  Review stale or duplicated target harness guidance. Do not delete, archive,
+  move, or rename files without explicit approval for the specific files.
+
 ## Commands
 
 Use the project virtual environment when running local commands:
