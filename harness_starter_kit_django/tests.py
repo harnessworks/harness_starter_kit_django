@@ -187,6 +187,23 @@ class CommentViewTests(TestCase):
         self.assertEqual(comment.post, self.post)
         self.assertEqual(comment.owner, self.other_user)
 
+    def test_invalid_comment_rerenders_post_detail(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.post(
+            reverse("posts:comment_create", kwargs={"post_pk": self.post.pk}),
+            {"content": ""},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response,
+            "harness_starter_kit_django/post_detail.html",
+        )
+        self.assertContains(response, self.post.title)
+        self.assertContains(response, "This field is required.")
+        self.assertFalse(Comment.objects.filter(post=self.post).exists())
+
     def test_owner_can_delete_comment(self):
         self.client.force_login(self.other_user)
         comment = Comment.objects.create(

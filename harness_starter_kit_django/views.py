@@ -82,6 +82,7 @@ class PostDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
+    template_name = "harness_starter_kit_django/post_detail.html"
 
     def dispatch(self, request, *args, **kwargs):
         self.parent_post = get_object_or_404(Post, pk=kwargs["post_pk"])
@@ -93,6 +94,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["post"] = self.parent_post
+        context["comment_form"] = context.get("form", CommentForm())
         return context
 
     def form_valid(self, form):
