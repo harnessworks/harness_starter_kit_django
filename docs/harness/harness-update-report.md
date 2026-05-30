@@ -52,8 +52,8 @@
 
 - Decide later whether this repository should adopt public OSS files such as
   `CONTRIBUTING.md`, `SECURITY.md`, and issue/PR templates.
-- Decide later whether to rename `evaulation/` to evaluation; that spelling
-  cleanup touches documented paths and should be handled as its own change.
+- Renamed the misspelled impact-evaluation directory to `evaluation/` and
+  updated documented references.
 - Keep using decision records for architecture, database, test runner,
   formatter, linter, CI, and deployment assumptions.
 

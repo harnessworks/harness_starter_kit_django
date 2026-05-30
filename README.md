@@ -52,7 +52,7 @@ management.
 |-- .github/workflows/              # CI Harness checks
 |-- .harness/                       # Harness source tracking
 |-- docs/                           # Harness knowledge store
-|-- evaulation/                     # Harness impact evaluation
+|-- evaluation/                     # Harness impact evaluation
 |-- scripts/                        # Local Harness verification scripts
 |-- AGENTS.md                       # Agent instructions
 |-- manage.py
@@ -98,7 +98,7 @@ flowchart TD
 
     F --> F1["docs/harness/adoption-report.md"]
     F --> F2["docs/harness/harness-update-report.md"]
-    F --> F3["evaulation/harness-impact.md"]
+    F --> F3["evaluation/harness-impact.md"]
 
     G --> G1[".harness/source.json"]
 
@@ -123,14 +123,14 @@ flowchart TD
 | Harness source | [.harness/source.json](.harness/source.json) | Tracks the latest Harness Starter Kit commit referenced by this repository |
 | CI Harness check | [.github/workflows/harness-check.yml](.github/workflows/harness-check.yml) | Runs local Harness checks in GitHub Actions |
 | Update report | [docs/harness/harness-update-report.md](docs/harness/harness-update-report.md) | Records what was applied or skipped from the latest kit update |
-| Impact evaluation | [evaulation/harness-impact.md](evaulation/harness-impact.md) | Evaluates the practical benefits and limits of Harness Kit in this project |
+| Impact evaluation | [evaluation/harness-impact.md](evaluation/harness-impact.md) | Evaluates the practical benefits and limits of Harness Kit in this project |
 
 ## Harness Kit Evaluation
 
 In this repository, Harness Kit has been more useful for collaboration rules,
 verification loops, decision records, failure memory, and update tracking than
 for the app features themselves. The detailed evaluation lives in
-[evaulation/harness-impact.md](evaulation/harness-impact.md).
+[evaluation/harness-impact.md](evaluation/harness-impact.md).
 
 Recent dogfood observation: a plain "analyze this project" request led an agent
 to identify structure, current behavior, test status, documentation status, git
