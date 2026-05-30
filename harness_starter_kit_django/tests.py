@@ -89,6 +89,18 @@ class PostCrudViewTests(TestCase):
         self.assertEqual(post.content, "작성 내용")
         self.assertEqual(post.owner, self.user)
 
+    def test_anonymous_user_is_redirected_from_update(self):
+        post = Post.objects.create(title="수정 전", content="이전 내용", owner=self.user)
+        url = reverse("posts:update", kwargs={"pk": post.pk})
+
+        response = self.client.get(url)
+
+        self.assertRedirects(
+            response,
+            f"{reverse('login')}?next={url}",
+            fetch_redirect_response=False,
+        )
+
     def test_owner_can_update_post(self):
         self.client.force_login(self.user)
         post = Post.objects.create(title="수정 전", content="이전 내용", owner=self.user)
@@ -162,6 +174,23 @@ class CommentViewTests(TestCase):
         self.assertContains(response, "보이는 댓글")
         self.assertContains(response, self.other_user.username)
 
+    def test_comment_owner_sees_update_link(self):
+        self.client.force_login(self.other_user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="수정 링크 댓글",
+        )
+
+        response = self.client.get(self.post.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "댓글 수정")
+        self.assertContains(
+            response,
+            reverse("posts:comment_update", kwargs={"pk": comment.pk}),
+        )
+
     def test_anonymous_user_is_redirected_from_comment_create(self):
         url = reverse("posts:comment_create", kwargs={"post_pk": self.post.pk})
 
@@ -203,6 +232,80 @@ class CommentViewTests(TestCase):
         self.assertContains(response, self.post.title)
         self.assertContains(response, "This field is required.")
         self.assertFalse(Comment.objects.filter(post=self.post).exists())
+
+    def test_anonymous_user_is_redirected_from_comment_update(self):
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="수정 전 댓글",
+        )
+        url = reverse("posts:comment_update", kwargs={"pk": comment.pk})
+
+        response = self.client.get(url)
+
+        self.assertRedirects(
+            response,
+            f"{reverse('login')}?next={url}",
+            fetch_redirect_response=False,
+        )
+
+    def test_owner_can_update_comment(self):
+        self.client.force_login(self.other_user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="수정 전 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_update", kwargs={"pk": comment.pk}),
+            {"content": "수정 후 댓글"},
+        )
+
+        comment.refresh_from_db()
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertEqual(comment.content, "수정 후 댓글")
+        self.assertEqual(comment.owner, self.other_user)
+        self.assertEqual(comment.post, self.post)
+
+    def test_other_user_cannot_update_comment(self):
+        self.client.force_login(self.user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="남의 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_update", kwargs={"pk": comment.pk}),
+            {"content": "권한 없는 수정"},
+        )
+
+        comment.refresh_from_db()
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(comment.content, "남의 댓글")
+
+    def test_invalid_comment_update_rerenders_form(self):
+        self.client.force_login(self.other_user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="수정 전 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_update", kwargs={"pk": comment.pk}),
+            {"content": ""},
+        )
+
+        comment.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(
+            response,
+            "harness_starter_kit_django/comment_form.html",
+        )
+        self.assertContains(response, "This field is required.")
+        self.assertEqual(comment.content, "수정 전 댓글")
 
     def test_owner_can_delete_comment(self):
         self.client.force_login(self.other_user)

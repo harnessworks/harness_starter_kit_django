@@ -1,6 +1,10 @@
+from urllib.parse import urlsplit
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import redirect_to_login
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Q
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, resolve_url
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
@@ -13,6 +17,24 @@ class OwnerRequiredMixin(UserPassesTestMixin):
 
     def test_func(self):
         return self.get_object().owner == self.request.user
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            raise PermissionDenied(self.get_permission_denied_message())
+
+        path = self.request.build_absolute_uri()
+        resolved_login_url = resolve_url(self.get_login_url())
+        login_scheme, login_netloc = urlsplit(resolved_login_url)[:2]
+        current_scheme, current_netloc = urlsplit(path)[:2]
+        if (not login_scheme or login_scheme == current_scheme) and (
+            not login_netloc or login_netloc == current_netloc
+        ):
+            path = self.request.get_full_path()
+        return redirect_to_login(
+            path,
+            resolved_login_url,
+            self.get_redirect_field_name(),
+        )
 
 
 class PostListView(ListView):
@@ -104,6 +126,16 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return self.parent_post.get_absolute_url()
+
+
+class CommentUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    context_object_name = "comment"
+    template_name = "harness_starter_kit_django/comment_form.html"
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
 
 
 class CommentDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):

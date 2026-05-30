@@ -1,0 +1,21 @@
+{% extends "harness_starter_kit_django/base.html" %}
+
+{% block title %}댓글 수정{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h1 class="page-title">댓글 수정</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="field">
+                {{ form.content.label_tag }}
+                {{ form.content }}
+                {{ form.content.errors }}
+            </div>
+            <div class="actions">
+                <button type="submit">저장</button>
+                <a class="button button--secondary" href="{{ comment.post.get_absolute_url }}">취소</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}
