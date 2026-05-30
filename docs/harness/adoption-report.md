@@ -137,6 +137,8 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
   Django app and test command are committed, whichever comes first.
 - Results location: Record observations in a future
   `docs/harness/effectiveness-report.md`.
+- Task outcome records location: Record per-task observations under
+  `docs/effectiveness/task-outcomes/`.
 
 ## Assumptions
 

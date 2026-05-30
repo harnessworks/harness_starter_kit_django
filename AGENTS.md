@@ -94,10 +94,14 @@ Before making architecture, command, or framework changes, inspect:
 
 Add a short decision record when changing the Django project layout, database
 policy, test runner, formatter, linter, CI provider, or deployment assumptions.
-Add a failure note only when an attempted approach should not be repeated.
-If a change fixes a failed CI run, failed harness check, repeated agent mistake,
-or cross-environment mismatch, add a `docs/failures/*.md` record unless the
-failure is purely transient.
+Add a failure note only when the failure mode should not be repeated. If a
+change fixes a user-visible runtime failure or high-risk bug path that should
+not recur, including a 5xx error, crash, security or permission bug, data-loss
+risk, failed CI run, failed harness check, repeated agent mistake, previously
+identified bug path, or cross-environment mismatch, add a
+`docs/failures/*.md` record unless the issue was purely transient or already
+covered by an existing failure note. If skipped, explain why in the final
+report.
 
 When refreshing this repository against a newer `harness-starter-kit`, update
 `.harness/source.json` and add a short update report under `docs/harness/`.

@@ -25,6 +25,7 @@ ADOPTION_FIELDS = (
     "Primary metric",
     "Review window",
     "Results location",
+    "Task outcome records location",
 )
 TODO_RE = re.compile(r"\bTODO\b", flags=re.IGNORECASE)
 
