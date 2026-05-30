@@ -22,6 +22,7 @@ and migrations.
 - `/posts/<id>/comments/new/`: create comment
 - `/comments/<id>/edit/`: edit comment
 - `/comments/<id>/delete/`: delete comment
+- `/accounts/signup/`: sign up
 - `/accounts/login/`: login
 - `/accounts/logout/`: logout
 - `/admin/`: Django admin
@@ -29,7 +30,10 @@ and migrations.
 Post list and detail pages are public. Creating posts requires login. Updating
 and deleting posts is limited to the post owner. The list supports search by
 title, content, and owner username, plus pagination. Comments require login to
-create, and only the comment owner can update or delete them.
+create, and only the comment owner can update or delete them. New users can
+sign up from the web UI and are logged in automatically after registration.
+Post and comment create, update, delete, and validation failure flows show
+Django messages.
 
 ## Admin
 

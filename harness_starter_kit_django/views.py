@@ -1,5 +1,7 @@
 from urllib.parse import urlsplit
 
+from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import PermissionDenied
@@ -8,8 +10,26 @@ from django.shortcuts import get_object_or_404, redirect, resolve_url
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .forms import CommentForm, PostForm
+from .forms import CommentForm, PostForm, SignUpForm
 from .models import Comment, Post
+
+
+FORM_INVALID_MESSAGE = "입력 내용을 확인하세요."
+
+
+class FeedbackMessageMixin:
+    success_message = ""
+    invalid_message = FORM_INVALID_MESSAGE
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if self.success_message:
+            messages.success(self.request, self.success_message)
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, self.invalid_message)
+        return super().form_invalid(form)
 
 
 class OwnerRequiredMixin(UserPassesTestMixin):
@@ -35,6 +55,23 @@ class OwnerRequiredMixin(UserPassesTestMixin):
             resolved_login_url,
             self.get_redirect_field_name(),
         )
+
+
+class SignUpView(FeedbackMessageMixin, CreateView):
+    form_class = SignUpForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("posts:list")
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("posts:list")
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        login(self.request, self.object)
+        messages.success(self.request, "회원가입이 완료되었습니다.")
+        return redirect(self.get_success_url())
 
 
 class PostListView(ListView):
@@ -78,20 +115,27 @@ class PostDetailView(DetailView):
         return context
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, FeedbackMessageMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = "harness_starter_kit_django/post_form.html"
+    success_message = "게시글이 작성되었습니다."
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
 
-class PostUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
+class PostUpdateView(
+    LoginRequiredMixin,
+    OwnerRequiredMixin,
+    FeedbackMessageMixin,
+    UpdateView,
+):
     model = Post
     form_class = PostForm
     template_name = "harness_starter_kit_django/post_form.html"
+    success_message = "게시글이 수정되었습니다."
 
 
 class PostDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
@@ -100,11 +144,16 @@ class PostDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
     success_url = reverse_lazy("posts:list")
     template_name = "harness_starter_kit_django/post_confirm_delete.html"
 
+    def form_valid(self, form):
+        messages.success(self.request, "게시글이 삭제되었습니다.")
+        return super().form_valid(form)
 
-class CommentCreateView(LoginRequiredMixin, CreateView):
+
+class CommentCreateView(LoginRequiredMixin, FeedbackMessageMixin, CreateView):
     model = Comment
     form_class = CommentForm
     template_name = "harness_starter_kit_django/post_detail.html"
+    success_message = "댓글이 작성되었습니다."
 
     def dispatch(self, request, *args, **kwargs):
         self.parent_post = get_object_or_404(Post, pk=kwargs["post_pk"])
@@ -128,11 +177,17 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return self.parent_post.get_absolute_url()
 
 
-class CommentUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
+class CommentUpdateView(
+    LoginRequiredMixin,
+    OwnerRequiredMixin,
+    FeedbackMessageMixin,
+    UpdateView,
+):
     model = Comment
     form_class = CommentForm
     context_object_name = "comment"
     template_name = "harness_starter_kit_django/comment_form.html"
+    success_message = "댓글이 수정되었습니다."
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
@@ -145,3 +200,7 @@ class CommentDeleteView(LoginRequiredMixin, OwnerRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+
+    def form_valid(self, form):
+        messages.success(self.request, "댓글이 삭제되었습니다.")
+        return super().form_valid(form)

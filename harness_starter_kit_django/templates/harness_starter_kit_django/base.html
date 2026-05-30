@@ -163,6 +163,29 @@
             margin-top: 18px;
         }
 
+        .messages {
+            display: grid;
+            gap: 8px;
+            margin: 0 0 18px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .message {
+            border: 1px solid #b8d8d3;
+            border-radius: 6px;
+            background: #eef8f6;
+            color: var(--accent-strong);
+            padding: 10px 12px;
+            font-weight: 700;
+        }
+
+        .message--error {
+            border-color: #efbab6;
+            background: #fff1f0;
+            color: var(--danger);
+        }
+
         .button,
         button {
             display: inline-flex;
@@ -269,6 +292,12 @@
             color: var(--danger);
         }
 
+        .help-text {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
         @media (max-width: 640px) {
             .site-header__inner,
             .toolbar,
@@ -300,12 +329,20 @@
                         <button class="button--link" type="submit">로그아웃</button>
                     </form>
                 {% else %}
+                    <a class="button button--secondary" href="{% url 'signup' %}">회원가입</a>
                     <a class="button" href="{% url 'login' %}">로그인</a>
                 {% endif %}
             </nav>
         </div>
     </header>
     <main class="page">
+        {% if messages %}
+            <ul class="messages" aria-label="알림">
+                {% for message in messages %}
+                    <li class="message{% if message.tags %} message--{{ message.tags }}{% endif %}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         {% block content %}{% endblock %}
     </main>
 </body>

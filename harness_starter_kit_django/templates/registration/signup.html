@@ -1,0 +1,36 @@
+{% extends "harness_starter_kit_django/base.html" %}
+
+{% block title %}회원가입{% endblock %}
+
+{% block content %}
+    <section class="panel">
+        <h1 class="page-title">회원가입</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="field">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+            <div class="field">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+                {% if form.password1.help_text %}
+                    <div class="help-text">{{ form.password1.help_text }}</div>
+                {% endif %}
+            </div>
+            <div class="field">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </div>
+            <div class="actions">
+                <button type="submit">가입</button>
+                <a class="button button--secondary" href="{% url 'login' %}">로그인</a>
+                <a class="button button--secondary" href="{% url 'posts:list' %}">취소</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

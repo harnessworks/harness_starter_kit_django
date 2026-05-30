@@ -9,6 +9,54 @@ from .models import Comment, Post
 User = get_user_model()
 
 
+class AuthenticationViewTests(TestCase):
+    def test_signup_page_is_available(self):
+        response = self.client.get(reverse("signup"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/signup.html")
+        self.assertContains(response, "회원가입")
+
+    def test_signup_creates_user_and_logs_in(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "username": "newuser",
+                "password1": "S3cure-Test-Pass-987",
+                "password2": "S3cure-Test-Pass-987",
+            },
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("posts:list"))
+        self.assertTrue(User.objects.filter(username="newuser").exists())
+        self.assertTrue(response.wsgi_request.user.is_authenticated)
+        self.assertEqual(response.wsgi_request.user.username, "newuser")
+        self.assertContains(response, "회원가입이 완료되었습니다.")
+
+    def test_invalid_signup_shows_feedback_message(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "username": "newuser",
+                "password1": "S3cure-Test-Pass-987",
+                "password2": "different-pass-987",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "입력 내용을 확인하세요.")
+        self.assertFalse(User.objects.filter(username="newuser").exists())
+
+    def test_authenticated_user_is_redirected_from_signup(self):
+        user = User.objects.create_user(username="writer", password="password123")
+        self.client.force_login(user)
+
+        response = self.client.get(reverse("signup"))
+
+        self.assertRedirects(response, reverse("posts:list"))
+
+
 class PostModelTests(TestCase):
     def test_post_string_uses_title(self):
         post = Post.objects.create(title="첫 게시글", content="내용입니다.")
@@ -336,6 +384,125 @@ class CommentViewTests(TestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertTrue(Comment.objects.filter(pk=comment.pk).exists())
+
+
+class FeedbackMessageTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="writer", password="password123")
+        self.other_user = User.objects.create_user(
+            username="other",
+            password="password123",
+        )
+        self.post = Post.objects.create(
+            title="기존 게시글",
+            content="기존 본문",
+            owner=self.user,
+        )
+
+    def test_post_create_shows_success_message(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("posts:create"),
+            {"title": "메시지 게시글", "content": "메시지 본문"},
+            follow=True,
+        )
+
+        self.assertRedirects(
+            response,
+            Post.objects.get(title="메시지 게시글").get_absolute_url(),
+        )
+        self.assertContains(response, "게시글이 작성되었습니다.")
+
+    def test_post_update_shows_success_message(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("posts:update", kwargs={"pk": self.post.pk}),
+            {"title": "수정된 게시글", "content": "수정된 본문"},
+            follow=True,
+        )
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertContains(response, "게시글이 수정되었습니다.")
+
+    def test_post_delete_shows_success_message(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("posts:delete", kwargs={"pk": self.post.pk}),
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("posts:list"))
+        self.assertContains(response, "게시글이 삭제되었습니다.")
+
+    def test_invalid_post_create_shows_feedback_message(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("posts:create"),
+            {"title": "", "content": ""},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "입력 내용을 확인하세요.")
+
+    def test_comment_create_shows_success_message(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.post(
+            reverse("posts:comment_create", kwargs={"post_pk": self.post.pk}),
+            {"content": "메시지 댓글"},
+            follow=True,
+        )
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertContains(response, "댓글이 작성되었습니다.")
+
+    def test_comment_update_shows_success_message(self):
+        self.client.force_login(self.other_user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="수정 전 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_update", kwargs={"pk": comment.pk}),
+            {"content": "수정 후 댓글"},
+            follow=True,
+        )
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertContains(response, "댓글이 수정되었습니다.")
+
+    def test_comment_delete_shows_success_message(self):
+        self.client.force_login(self.other_user)
+        comment = Comment.objects.create(
+            post=self.post,
+            owner=self.other_user,
+            content="삭제할 댓글",
+        )
+
+        response = self.client.post(
+            reverse("posts:comment_delete", kwargs={"pk": comment.pk}),
+            follow=True,
+        )
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertContains(response, "댓글이 삭제되었습니다.")
+
+    def test_invalid_comment_create_shows_feedback_message(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.post(
+            reverse("posts:comment_create", kwargs={"post_pk": self.post.pk}),
+            {"content": ""},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "입력 내용을 확인하세요.")
 
 
 class AdminSiteTests(TestCase):
