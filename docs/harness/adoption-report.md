@@ -1,5 +1,25 @@
 # Harness Adoption Report
 
+## Refresh Note
+
+This report is historical: it records the initial Harness adoption and early
+Django setup. As of the latest refresh, Django source, CI, local harness checks,
+public board features, authentication, comments, signup, and feedback messages
+exist in the target repository.
+
+Completed items that were originally listed as remaining work:
+
+- Django was initialized with `manage.py` and the `config` project package.
+- The `harness_starter_kit_django/` app now contains models, views, URLs,
+  templates, tests, admin registration, and migrations.
+- CI is present in `.github/workflows/harness-check.yml`.
+- The local `harness-starter-kit/` clone is ignored and remains reference
+  material only.
+
+Current remaining follow-up is to decide whether to record per-task outcome
+notes under `docs/effectiveness/task-outcomes/` for future comparable agent
+tasks.
+
 ## Target Repository Observed
 
 - Stack and framework: Django was initialized after harness adoption. The root
@@ -151,14 +171,17 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
 
 ## Remaining Manual Steps
 
-- Run `python scripts\check_harness.py` after adoption.
-- Decide whether to remove or keep ignoring `harness-starter-kit/` before
-  committing. The recommended action is to remove it before commit; keeping the
-  `.gitignore` entry is still useful protection during future harness reviews.
-- Add real models, views, URLs, templates, or tests to
-  `harness_starter_kit_django/` when the app's domain responsibility is known.
-- CI was added later in `.github/workflows/harness-check.yml`; see
-  `docs/harness/harness-update-report.md` for the update record.
+- Historical item completed: `python scripts\check_harness.py` was run after
+  adoption and is now wired into CI.
+- Historical item completed: `harness-starter-kit/` is ignored and treated as
+  local reference material only.
+- Historical item completed: `harness_starter_kit_django/` now contains the
+  board application's models, views, URLs, templates, tests, admin
+  registration, and migrations.
+- Historical item completed: CI exists in `.github/workflows/harness-check.yml`;
+  see `docs/harness/harness-update-report.md` for the update record.
+- Current item: decide whether future comparable agent tasks should include
+  per-task outcome notes under `docs/effectiveness/task-outcomes/`.
 
 ## Notes For Future Agents
 
