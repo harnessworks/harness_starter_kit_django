@@ -16,9 +16,9 @@ Completed items that were originally listed as remaining work:
 - The local `harness-starter-kit/` clone is ignored and remains reference
   material only.
 
-Current remaining follow-up is to decide whether to record per-task outcome
-notes under `docs/effectiveness/task-outcomes/` for future comparable agent
-tasks.
+Follow-up resolved on 2026-05-31: per-task outcome records are now adopted for
+Harness-relevant tasks under `docs/effectiveness/task-outcomes/`. See
+`docs/decisions/0011-adopt-task-outcome-records.md`.
 
 ## Target Repository Observed
 
@@ -180,8 +180,8 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
   registration, and migrations.
 - Historical item completed: CI exists in `.github/workflows/harness-check.yml`;
   see `docs/harness/harness-update-report.md` for the update record.
-- Current item: decide whether future comparable agent tasks should include
-  per-task outcome notes under `docs/effectiveness/task-outcomes/`.
+- Historical item completed: per-task outcome records are now adopted for
+  Harness-relevant tasks under `docs/effectiveness/task-outcomes/`.
 
 ## Notes For Future Agents
 

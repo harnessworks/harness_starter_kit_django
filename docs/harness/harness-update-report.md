@@ -48,8 +48,9 @@
 
 ## Manual Review
 
-- Decide later whether to fill per-task records under
-  `docs/effectiveness/task-outcomes/` for future comparable agent tasks.
+- Resolved after the update: per-task records are now adopted for
+  Harness-relevant tasks under `docs/effectiveness/task-outcomes/`; see
+  `docs/decisions/0011-adopt-task-outcome-records.md`.
 - Decide later whether this repository should adopt public OSS files such as
   `CONTRIBUTING.md`, `SECURITY.md`, `CHANGELOG.md`, issue templates, or a pull
   request template.
