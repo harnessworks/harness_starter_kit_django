@@ -95,6 +95,7 @@ Before making architecture, command, or framework changes, inspect:
 - `docs/failures/`
 - `docs/conventions/`
 - `docs/domain/`
+- `docs/effectiveness/task-outcomes/` when the work is Harness-relevant
 
 Add a short decision record when changing the Django project layout, database
 policy, test runner, formatter, linter, CI provider, or deployment assumptions.
