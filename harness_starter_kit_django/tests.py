@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+from .views import MY_PAGE_ACTIVITY_LIMIT
 from .models import Comment, Post
 
 
@@ -55,6 +56,120 @@ class AuthenticationViewTests(TestCase):
         response = self.client.get(reverse("signup"))
 
         self.assertRedirects(response, reverse("posts:list"))
+
+
+class MyPageViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="writer", password="password123")
+        self.other_user = User.objects.create_user(
+            username="other",
+            password="password123",
+        )
+
+    def test_anonymous_user_is_redirected_from_my_page(self):
+        response = self.client.get(reverse("my_page"))
+
+        self.assertRedirects(
+            response,
+            f"{reverse('login')}?next={reverse('my_page')}",
+            fetch_redirect_response=False,
+        )
+
+    def test_authenticated_header_links_to_my_page(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("posts:list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "마이페이지")
+        self.assertContains(response, reverse("my_page"))
+
+    def test_my_page_shows_only_current_user_activity(self):
+        self.client.force_login(self.user)
+        my_post = Post.objects.create(
+            title="내 게시글",
+            content="내 본문",
+            owner=self.user,
+        )
+        commented_post = Post.objects.create(
+            title="댓글 단 게시글",
+            content="다른 본문",
+            owner=self.other_user,
+        )
+        Post.objects.create(
+            title="다른 사용자만의 글",
+            content="다른 사용자만의 본문",
+            owner=self.other_user,
+        )
+        my_comment = Comment.objects.create(
+            post=commented_post,
+            owner=self.user,
+            content="내 댓글",
+        )
+        Comment.objects.create(
+            post=my_post,
+            owner=self.other_user,
+            content="다른 사용자 댓글",
+        )
+
+        response = self.client.get(reverse("my_page"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/my_page.html")
+        self.assertContains(response, self.user.username)
+        self.assertContains(response, "내 게시글")
+        self.assertContains(response, "내 댓글")
+        self.assertContains(response, reverse("posts:update", kwargs={"pk": my_post.pk}))
+        self.assertContains(
+            response,
+            reverse("posts:comment_update", kwargs={"pk": my_comment.pk}),
+        )
+        self.assertNotContains(
+            response,
+            reverse("posts:comment_delete", kwargs={"pk": my_comment.pk}),
+        )
+        self.assertContains(response, "댓글 단 게시글")
+        self.assertNotContains(response, "다른 사용자만의 글")
+        self.assertNotContains(response, "다른 사용자 댓글")
+        self.assertEqual(response.context["post_count"], 1)
+        self.assertEqual(response.context["comment_count"], 1)
+
+    def test_my_page_limits_activity_lists_to_recent_items(self):
+        self.client.force_login(self.user)
+        post = Post.objects.create(
+            title="댓글 대상 게시글",
+            content="댓글 본문",
+            owner=self.other_user,
+        )
+        for index in range(MY_PAGE_ACTIVITY_LIMIT + 1):
+            Post.objects.create(
+                title=f"내 게시글 {index}",
+                content="내 본문",
+                owner=self.user,
+            )
+            Comment.objects.create(
+                post=post,
+                owner=self.user,
+                content=f"내 댓글 {index}",
+            )
+
+        response = self.client.get(reverse("my_page"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["my_posts"]), MY_PAGE_ACTIVITY_LIMIT)
+        self.assertEqual(len(response.context["my_comments"]), MY_PAGE_ACTIVITY_LIMIT)
+        self.assertEqual(response.context["post_count"], MY_PAGE_ACTIVITY_LIMIT + 1)
+        self.assertEqual(response.context["comment_count"], MY_PAGE_ACTIVITY_LIMIT + 1)
+        self.assertContains(response, f"최근 {MY_PAGE_ACTIVITY_LIMIT}개만 표시됩니다.")
+
+    def test_my_page_shows_empty_states(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("my_page"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "작성한 게시글이 없습니다.")
+        self.assertContains(response, "작성한 댓글이 없습니다.")
 
 
 class PostModelTests(TestCase):

@@ -23,6 +23,7 @@ and migrations.
 - `/comments/<id>/edit/`: edit comment
 - `/comments/<id>/delete/`: delete comment
 - `/accounts/signup/`: sign up
+- `/accounts/me/`: my page
 - `/accounts/login/`: login
 - `/accounts/logout/`: logout
 - `/admin/`: Django admin
@@ -33,7 +34,8 @@ title, content, and owner username, plus pagination. Comments require login to
 create, and only the comment owner can update or delete them. New users can
 sign up from the web UI and are logged in automatically after registration.
 Post and comment create, update, delete, and validation failure flows show
-Django messages.
+Django messages. Authenticated users can open a my page that summarizes their
+own post and comment activity and shows recent items with edit links.
 
 ## Admin
 

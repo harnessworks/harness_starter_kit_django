@@ -8,13 +8,21 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, resolve_url
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
 from .forms import CommentForm, PostForm, SignUpForm
 from .models import Comment, Post
 
 
 FORM_INVALID_MESSAGE = "입력 내용을 확인하세요."
+MY_PAGE_ACTIVITY_LIMIT = 5
 
 
 class FeedbackMessageMixin:
@@ -72,6 +80,34 @@ class SignUpView(FeedbackMessageMixin, CreateView):
         login(self.request, self.object)
         messages.success(self.request, "회원가입이 완료되었습니다.")
         return redirect(self.get_success_url())
+
+
+class MyPageView(LoginRequiredMixin, TemplateView):
+    template_name = "registration/my_page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        my_posts = (
+            Post.objects.filter(owner=user)
+            .annotate(comment_count=Count("comments"))
+            .order_by("-created_at")
+        )
+        my_comments = Comment.objects.filter(owner=user).select_related("post").order_by(
+            "-created_at"
+        )
+        post_count = my_posts.count()
+        comment_count = my_comments.count()
+        context.update(
+            {
+                "my_posts": my_posts[:MY_PAGE_ACTIVITY_LIMIT],
+                "my_comments": my_comments[:MY_PAGE_ACTIVITY_LIMIT],
+                "post_count": post_count,
+                "comment_count": comment_count,
+                "activity_limit": MY_PAGE_ACTIVITY_LIMIT,
+            }
+        )
+        return context
 
 
 class PostListView(ListView):

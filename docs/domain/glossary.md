@@ -15,7 +15,8 @@ comment. A comment is deleted when its post or owner is deleted.
 
 A Django user account that can create posts and comments after logging in. New
 users can register through the public signup page and are logged in
-automatically after successful registration.
+automatically after successful registration. Logged-in users can open a my page
+to review their own recent posts and comments.
 
 ## 게시판
 
