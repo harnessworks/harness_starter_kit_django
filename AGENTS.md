@@ -26,8 +26,10 @@ of normal project work.
   `harness-starter-kit/commands/harness-review.md` in sub-agent invocation
   mode. Treat the request as explicit permission to use a read-only reviewer
   subagent when available and permitted by the active runtime and tool
-  instructions; if unavailable, blocked, not permitted, or failed, fall back to
-  single-agent review and report the reason.
+  instructions. The parent/orchestrator owns the reviewer-mode and fallback
+  decision from the actual spawn/wait result; do not copy those fields from
+  subagent output. If unavailable, blocked, not permitted, or failed, fall back
+  to single-agent review and report the reason.
 - `/harness review`: use `harness-starter-kit/commands/harness-review.md`.
   Review the current change set from an opposing harness-engineering
   perspective. Report findings only; do not modify files unless the user asks

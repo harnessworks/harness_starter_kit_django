@@ -3,10 +3,10 @@
 ## Kit Source
 
 - URL: `https://github.com/baskduf/harness-starter-kit`
-- Previous commit: `a8f98842a414f058c19d29ef945bce8237c7eb0d`
-- Current commit: `08513edf7455815312175f5a88f161cb42405305`
-- Reference clone state: Clean and fast-forwarded from `a8f9884` to
-  `08513ed`.
+- Previous commit: `08513edf7455815312175f5a88f161cb42405305`
+- Current commit: `832ede6c368c3d929a20c7e429ac3ad83ea84408`
+- Reference clone state: Clean and fast-forwarded from `08513ed` to
+  `832ede6`.
 
 ## Target State
 
@@ -15,27 +15,29 @@
   `README.md`, `docs/decisions/`, `docs/conventions/`, `docs/domain/`,
   `docs/failures/`, `docs/harness/`, local harness scripts,
   `.github/workflows/harness-check.yml`, `.gitattributes`, and `.gitignore`.
-- New kit guidance reviewed: `/harness review sub-agent` invocation mode,
-  `/harness review` fallback clarification, review report invocation field,
-  starter-kit README prompt updates, component map updates, site updates, and
-  starter-kit repository hygiene tests.
+- New kit guidance reviewed: parent/orchestrator ownership of `/harness review
+  sub-agent` reviewer mode and fallback reason, the restricted reviewer
+  subagent prompt, updated review report templates/examples, starter-kit
+  failure memory for the subagent reviewer-mode issue, and starter-kit
+  repository hygiene tests.
 
 ## Applied
 
-- Added target command routing for `/harness review sub-agent` to `AGENTS.md`
-  so explicit subagent review requests are distinguished from ordinary
-  `/harness review` requests.
+- Clarified target command routing for `/harness review sub-agent` in
+  `AGENTS.md` so reviewer mode and fallback reason are parent/orchestrator-owned
+  and not copied from subagent output.
 - Updated `.harness/source.json` to track
-  `08513edf7455815312175f5a88f161cb42405305`.
+  `832ede6c368c3d929a20c7e429ac3ad83ea84408`.
 - Refreshed this update report with the latest applied, skipped, and manual
   review items.
+- Added target failure memory for the subagent reviewer-mode ownership mistake.
 - Added a Harness task outcome record for this workflow update.
 
 ## Skipped
 
-- Did not copy starter-kit `/harness review` templates, example reports,
-  localized README text, site updates, or repository hygiene tests. They remain
-  reference material in the ignored `harness-starter-kit/` clone.
+- Did not copy starter-kit `/harness review` templates, example reports, or
+  repository hygiene tests. They remain reference material in the ignored
+  `harness-starter-kit/` clone.
 - Did not replace this target's `AGENTS.md` with the generic template. The
   local file contains Django-specific commands, directory rules, migration
   policy, and commit rules that should remain the source of truth.
@@ -46,9 +48,6 @@
 - Did not duplicate the full `/harness review` invocation-mode procedure into
   `AGENTS.md` because `AGENTS.md` routes the command to the refreshed reference
   command file.
-- Did not add a new failure note because this was a proactive kit refresh and
-  did not fix a user-visible runtime failure, high-risk bug path, failed CI run,
-  failed harness check, repeated agent mistake, or cross-environment mismatch.
 
 ## Manual Review
 
@@ -57,9 +56,9 @@
   request template.
 - Decide later whether to keep an ignored local `harness-starter-kit/` clone
   between updates or remove it after each update. It must not be committed.
-- Decide later whether the target README should document
-  `/harness review sub-agent` directly for human readers, or whether command
-  routing in `AGENTS.md` is sufficient.
+- Decide later whether the target README should document `/harness review`
+  commands directly for human readers, or whether command routing in
+  `AGENTS.md` is sufficient.
 
 ## Checks Run
 
@@ -70,12 +69,10 @@
 
 ## Failure Memory
 
-- Recorded: none.
-- Skipped: This update was a proactive kit refresh and did not fix a
-  user-visible runtime failure, high-risk bug path, failed CI run, failed
-  harness check, repeated agent mistake, or cross-environment mismatch.
+- Recorded: `docs/failures/0005-subagent-reviewer-mode-ownership.md`.
+- Skipped: none.
 
 ## Source Tracking
 
 - `.harness/source.json`: Updated to
-  `08513edf7455815312175f5a88f161cb42405305`.
+  `832ede6c368c3d929a20c7e429ac3ad83ea84408`.
