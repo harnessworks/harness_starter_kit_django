@@ -3,10 +3,10 @@
 ## Kit Source
 
 - URL: `https://github.com/baskduf/harness-starter-kit`
-- Previous commit: `cf1e288238959ed80e7dd0987afb1af93c3a59e7`
-- Current commit: `6ac7e8b287c24f82b8ec99a448dc8b695ecfdd68`
-- Reference clone state: Clean and fast-forwarded from `cf1e288` to
-  `6ac7e8b`.
+- Previous commit: `6ac7e8b287c24f82b8ec99a448dc8b695ecfdd68`
+- Current commit: `d076aa9ff4755e0ea980fd7919c8bd32dc109c03`
+- Reference clone state: Clean and fast-forwarded from `6ac7e8b` to
+  `d076aa9`.
 
 ## Target State
 
@@ -15,43 +15,36 @@
   `README.md`, `docs/decisions/`, `docs/conventions/`, `docs/domain/`,
   `docs/failures/`, `docs/harness/`, local harness scripts,
   `.github/workflows/harness-check.yml`, `.gitattributes`, and `.gitignore`.
-- New kit guidance reviewed: clarified failure-memory trigger for user-visible
-  runtime failures and high-risk bug paths, task outcome record template,
-  effectiveness-report source-record guidance, harness theory document,
-  Harness Doctor wording updates, and `/harness update` failure-memory wording.
+- New kit guidance reviewed: `/harness review` command workflow, review report
+  template and example, README command documentation, component-map wiring,
+  localized README additions, repository hygiene tests, changelog, roadmap, and
+  site asset updates.
 
 ## Applied
 
 - Updated `.harness/source.json` to track
-  `6ac7e8b287c24f82b8ec99a448dc8b695ecfdd68`.
-- Updated `AGENTS.md` so failure-memory guidance explicitly covers
-  user-visible runtime failures, 5xx errors, crashes, security or permission
-  bugs, data-loss risks, and previously identified bug paths.
-- Updated `docs/failures/README.md` with the same clarified failure-note
-  trigger.
-- Updated `scripts/check_effectiveness_plan.py` to require a task outcome
-  records location in adoption effectiveness plans.
-- Updated `docs/harness/adoption-report.md` with the target task outcome
-  records location.
-- Added `docs/effectiveness/task-outcomes/README.md` as the target location for
-  optional per-task outcome records.
+  `d076aa9ff4755e0ea980fd7919c8bd32dc109c03`.
+- Updated `AGENTS.md` so `/harness review` routes to
+  `harness-starter-kit/commands/harness-review.md` and remains diagnostic by
+  default.
 - Refreshed this update report with the latest applied, skipped, and manual
   review items.
 
 ## Skipped
 
-- Did not copy starter-kit theory, task-outcome template, localized READMEs,
-  site files, installer tests, repository hygiene tests, or public OSS docs.
-  They remain reference material in the ignored `harness-starter-kit/` clone.
+- Did not copy starter-kit `/harness review` templates, example reports,
+  localized READMEs, changelog, roadmap, site files, site assets, starter-kit
+  component-map updates, or repository hygiene tests. They remain reference
+  material in the ignored `harness-starter-kit/` clone.
 - Did not replace this target's `AGENTS.md` with the generic template. The
   local file contains Django-specific commands, directory rules, migration
   policy, and commit rules that should remain the source of truth.
-- Did not replace local drift scripts wholesale. Only the
-  task-outcome-location check was adapted because it fits this repository's
-  existing effectiveness measurement plan.
-- Did not add a new failure note for this update because the relevant
-  user-visible 500 path is already recorded in
-  `docs/failures/0002-invalid-comment-form-500.md`.
+- Did not add new CI, pre-commit hooks, package scripts, dependencies, or
+  architecture checks because the upstream changes were documentation and
+  starter-kit repository hygiene changes, not target Django workflow changes.
+- Did not add a new failure note because this was a proactive kit refresh and
+  did not fix a user-visible runtime failure, high-risk bug path, failed CI run,
+  failed harness check, repeated agent mistake, or cross-environment mismatch.
 
 ## Manual Review
 
@@ -62,6 +55,8 @@
   request template.
 - Decide later whether to keep an ignored local `harness-starter-kit/` clone
   between updates or remove it after each update. It must not be committed.
+- Decide later whether the target README should document `/harness review`
+  directly, or whether command routing in `AGENTS.md` is sufficient.
 
 ## Checks Run
 
@@ -73,11 +68,11 @@
 ## Failure Memory
 
 - Recorded: none.
-- Skipped: This update was a proactive kit refresh. The runtime 500 failure
-  mode that motivated the clarified upstream guidance is already covered by
-  `docs/failures/0002-invalid-comment-form-500.md`.
+- Skipped: This update was a proactive kit refresh and did not fix a
+  user-visible runtime failure, high-risk bug path, failed CI run, failed
+  harness check, repeated agent mistake, or cross-environment mismatch.
 
 ## Source Tracking
 
 - `.harness/source.json`: Updated to
-  `6ac7e8b287c24f82b8ec99a448dc8b695ecfdd68`.
+  `d076aa9ff4755e0ea980fd7919c8bd32dc109c03`.

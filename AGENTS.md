@@ -22,6 +22,10 @@ of normal project work.
 - `/harness refresh`: use `harness-starter-kit/commands/harness-refresh.md`.
   Review stale or duplicated target harness guidance. Do not delete, archive,
   move, or rename files without explicit approval for the specific files.
+- `/harness review`: use `harness-starter-kit/commands/harness-review.md`.
+  Review the current change set from an opposing harness-engineering
+  perspective. Report findings only; do not modify files unless the user asks
+  to apply fixes after seeing the review.
 
 ## Commands
 
