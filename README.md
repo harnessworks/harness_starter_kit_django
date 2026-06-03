@@ -98,7 +98,9 @@ flowchart TD
     D --> D2["scripts/check_structure.py"]
     D --> D3["scripts/check_effectiveness_plan.py"]
     D --> D4["scripts/check_encoding_hygiene.py"]
-    D --> D5[".gitattributes"]
+    D --> D5["scripts/check_decision_memory.py"]
+    D --> D6["scripts/check_failure_memory.py"]
+    D --> D7[".gitattributes"]
 
     E --> E1["scripts/check_harness.py"]
     E --> E2["harness_starter_kit_django/tests.py"]
@@ -108,6 +110,7 @@ flowchart TD
     F --> F3["evaluation/harness-impact.md"]
 
     G --> G1[".harness/source.json"]
+    G --> G2[".harness/decision-memory-rules.json"]
 
     H --> H1[".github/workflows/harness-check.yml"]
 ```
@@ -121,13 +124,16 @@ flowchart TD
 | Coding conventions | [docs/conventions/coding.md](docs/conventions/coding.md) | Django structure, template, URL, and migration rules |
 | Domain glossary | [docs/domain/glossary.md](docs/domain/glossary.md) | Board and Post domain vocabulary |
 | Failure notes | [docs/failures/README.md](docs/failures/README.md) | Place to record mistakes or failed approaches that should not be repeated |
-| Harness wrapper | [scripts/check_harness.py](scripts/check_harness.py) | Runs documentation drift, structure drift, Django checks, and tests together |
+| Harness wrapper | [scripts/check_harness.py](scripts/check_harness.py) | Runs documentation drift, structure drift, encoding hygiene, effectiveness, memory, Django checks, and tests together |
 | Docs drift check | [scripts/check_docs_drift.py](scripts/check_docs_drift.py) | Detects broken local references in README and docs |
 | Structure check | [scripts/check_structure.py](scripts/check_structure.py) | Detects temporary files, backup files, and drift-prone files |
 | Encoding hygiene check | [scripts/check_encoding_hygiene.py](scripts/check_encoding_hygiene.py) | Detects invalid UTF-8 and common Korean mojibake markers |
+| Decision memory check | [scripts/check_decision_memory.py](scripts/check_decision_memory.py) | Warns when Django implementation diffs may need ADR coverage |
+| Failure memory check | [scripts/check_failure_memory.py](scripts/check_failure_memory.py) | Validates that failure notes name concrete detection or prevention checks |
 | Line ending policy | [.gitattributes](.gitattributes) | Normalizes text line endings and treats images as binary |
 | Effectiveness check | [scripts/check_effectiveness_plan.py](scripts/check_effectiveness_plan.py) | Detects missing measurement plans in adoption and effectiveness reports |
 | Harness source | [.harness/source.json](.harness/source.json) | Tracks the latest Harness Starter Kit commit referenced by this repository |
+| Decision memory rules | [.harness/decision-memory-rules.json](.harness/decision-memory-rules.json) | Configures Django paths watched by the decision-memory check |
 | CI Harness check | [.github/workflows/harness-check.yml](.github/workflows/harness-check.yml) | Runs local Harness checks in GitHub Actions |
 | Update report | [docs/harness/harness-update-report.md](docs/harness/harness-update-report.md) | Records what was applied or skipped from the latest kit update |
 | Impact evaluation | [evaluation/harness-impact.md](evaluation/harness-impact.md) | Evaluates the practical benefits and limits of Harness Kit in this project |

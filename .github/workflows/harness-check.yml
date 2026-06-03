@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -24,3 +26,7 @@ jobs:
 
       - name: Run harness checks
         run: python scripts/check_harness.py
+
+      - name: Check decision memory review
+        if: ${{ github.event_name == 'pull_request' }}
+        run: python scripts/check_decision_memory.py --base "${{ github.event.pull_request.base.sha }}"

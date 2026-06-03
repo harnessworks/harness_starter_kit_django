@@ -32,6 +32,8 @@ def main() -> int:
     run([python, "scripts/check_structure.py"])
     run([python, "scripts/check_encoding_hygiene.py"])
     run([python, "scripts/check_effectiveness_plan.py", "--require-report"])
+    run([python, "scripts/check_failure_memory.py"])
+    run([python, "scripts/check_decision_memory.py"])
 
     manage_py = ROOT / "manage.py"
     if manage_py.exists():

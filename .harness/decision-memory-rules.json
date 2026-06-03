@@ -1,0 +1,20 @@
+{
+  "watched_paths": [
+    "config/**",
+    "harness_starter_kit_django/**",
+    "manage.py",
+    "requirements.txt"
+  ],
+  "decision_paths": [
+    "docs/decisions/**"
+  ],
+  "ignored_paths": [
+    "harness_starter_kit_django/tests.py",
+    "harness_starter_kit_django/**/tests.py",
+    "harness_starter_kit_django/**/tests/**",
+    "harness_starter_kit_django/**/migrations/**",
+    "docs/**",
+    "scripts/**",
+    "templates/**"
+  ]
+}

@@ -20,6 +20,10 @@ Follow-up resolved on 2026-05-31: per-task outcome records are now adopted for
 Harness-relevant tasks under `docs/effectiveness/task-outcomes/`. See
 `docs/decisions/0011-adopt-task-outcome-records.md`.
 
+Follow-up resolved on 2026-06-03: decision-memory and failure-memory checks are
+now part of the normal Harness gate. See
+`docs/decisions/0013-adopt-decision-and-failure-memory-checks.md`.
+
 ## Target Repository Observed
 
 - Stack and framework: Django was initialized after harness adoption. The root
@@ -48,7 +52,15 @@ Harness-relevant tasks under `docs/effectiveness/task-outcomes/`. See
   drift check.
 - `scripts/check_effectiveness_plan.py`: Added adoption-report measurement
   validation.
+- `scripts/check_decision_memory.py`: Added Django-specific decision-memory
+  review warnings for implementation diffs.
+- `scripts/check_failure_memory.py`: Added validation for concrete failure-note
+  detection or prevention checks.
 - `scripts/check_harness.py`: Added the local verification wrapper.
+- `.harness/decision-memory-rules.json`: Added Django path rules for the
+  decision-memory check.
+- `docs/checklists/harness-review.md`: Added a manual Harness maintenance
+  review point.
 - `docs/harness/adoption-report.md`: Added this report.
 - `requirements.txt`: Added pinned Django environment dependencies.
 - `README.md`: Added setup, check, test, migrate, runserver, and harness
@@ -119,10 +131,18 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
 
 ## Failure Memory
 
-- Recorded during adoption: None; no failed CI run or repeated project-specific
-  mistake existed at initial adoption time.
-- First recorded failure after CI adoption:
-  `docs/failures/0001-docs-drift-windows-venv-command.md`.
+- Recorded: `docs/failures/0001-docs-drift-windows-venv-command.md`,
+  `docs/failures/0002-invalid-comment-form-500.md`,
+  `docs/failures/0003-owner-required-anonymous-403.md`,
+  `docs/failures/0004-inline-placeholder-path-docs-drift.md`, and
+  `docs/failures/0005-subagent-reviewer-mode-ownership.md`.
+- Detection or prevention check: `scripts/check_failure_memory.py` validates
+  that structured failure records name a concrete check or manual review point.
+  `scripts/check_harness.py` runs that validator locally, and
+  `.github/workflows/harness-check.yml` runs the wrapper in CI.
+- Skipped: Purely transient command mistakes and one-off diagnostics remain in
+  final reports unless they reveal a recurring bug path, failed check,
+  permission issue, data-loss risk, 5xx path, or cross-environment mismatch.
 
 ## Profile Absorption
 
@@ -139,10 +159,36 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
 - Baseline doc or structure hygiene checks: `scripts/check_docs_drift.py` checks
   local Markdown references; `scripts/check_structure.py` rejects temporary and
   backup files while ignoring the local starter-kit clone.
+- Memory checks: `scripts/check_decision_memory.py` warns when watched Django
+  implementation diffs lack a decision-record change, and
+  `scripts/check_failure_memory.py` validates failure-note detection or
+  prevention links.
 - Target-specific architecture checks: `scripts/check_harness.py` now runs
   Django system checks and tests when `manage.py` exists.
-- Not added: Import-boundary, model, view, or service-layer checks would be
-  speculative before any Django app exists.
+- Not added: Additional import-boundary or service-layer checks remain deferred
+  because the app is still small and current Django tests cover the active
+  behavior boundaries directly.
+
+## Verification Gate Placement
+
+- Normal completion gate: `scripts/check_harness.py`, run through the project
+  virtual environment when available.
+- Deterministic behavior checks included in the normal gate:
+  `scripts/check_docs_drift.py`, `scripts/check_structure.py`,
+  `scripts/check_encoding_hygiene.py`,
+  `scripts/check_effectiveness_plan.py --require-report`,
+  `scripts/check_failure_memory.py`, `scripts/check_decision_memory.py`,
+  `manage.py check`, and `manage.py test`.
+- Focused or manual checks outside the normal gate:
+  `scripts/check_decision_memory.py --base <pull-request-base-sha>` in pull
+  request CI, `/harness review`, `/harness doctor`, and manual review point
+  `docs/checklists/harness-review.md`.
+- Reasons for focused/manual placement: The PR-base decision-memory check needs
+  CI pull-request context, while the local wrapper checks working-tree diffs.
+  `/harness review` and `/harness doctor` are diagnostic review workflows
+  rather than required checks for every small task. The checklist covers
+  judgment-based maintenance items such as subagent reviewer-mode ownership
+  that cannot be proven reliably by a local deterministic script.
 
 ## Effectiveness Measurement Plan
 
@@ -151,8 +197,9 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
 - Comparable tasks to repeat or track: Track the next 3 to 5 agent tasks that
   add or modify the Django project layout, app boundaries, test command,
   migration policy, or verification tooling.
-- Primary metric: First-pass verification with `python scripts\check_harness.py`
-  and count of wrong-file edits outside the intended task boundary.
+- Primary metric: First-pass verification with `python scripts\check_harness.py`,
+  decision-memory warnings resolved or explained, and count of wrong-file edits
+  outside the intended task boundary.
 - Review window: Review after the next 5 agent changes or after the first
   Django app and test command are committed, whichever comes first.
 - Results location: Record observations in a future

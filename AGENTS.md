@@ -43,6 +43,8 @@ Use the project virtual environment when running local commands:
 .\.venv\Scripts\python.exe manage.py check
 .\.venv\Scripts\python.exe manage.py test
 .\.venv\Scripts\python.exe scripts\check_harness.py
+.\.venv\Scripts\python.exe scripts\check_decision_memory.py
+.\.venv\Scripts\python.exe scripts\check_failure_memory.py
 ```
 
 For first-time local database setup:
@@ -105,6 +107,13 @@ Before making architecture, command, or framework changes, inspect:
 - `docs/domain/`
 - `docs/effectiveness/task-outcomes/` when the work is Harness-relevant
 
+Before finishing, ask whether the change alters user workflow, input contract,
+input semantics, state normalization, API request or response shape, fallback
+policy, displayed decision criteria, durable data models, permission behavior,
+or project verification policy. If it does, handle decision memory explicitly:
+add or update `docs/decisions/*.md`, cite the existing ADR that covers the
+choice, or explain why the change is too narrow to need decision memory.
+
 Add a short decision record when changing the Django project layout, database
 policy, test runner, formatter, linter, CI provider, or deployment assumptions.
 Add a failure note only when the failure mode should not be repeated. If a
@@ -113,8 +122,14 @@ not recur, including a 5xx error, crash, security or permission bug, data-loss
 risk, failed CI run, failed harness check, repeated agent mistake, previously
 identified bug path, or cross-environment mismatch, add a
 `docs/failures/*.md` record unless the issue was purely transient or already
-covered by an existing failure note. If skipped, explain why in the final
+covered by an existing failure note. The failure note must name the regression
+test, fixture, smoke check, lint rule, drift check, CI gate, or manual review
+point that prevents or detects recurrence. If skipped, explain why in the final
 report.
+
+When harness rules, checks, CI, architecture boundaries, or agent-facing docs
+change, update the adoption/effectiveness reporting or add a Harness task
+outcome record.
 
 When refreshing this repository against a newer `harness-starter-kit`, update
 `.harness/source.json` and add a short update report under `docs/harness/`.
@@ -168,6 +183,11 @@ Before reporting completion:
 
 - Run `python scripts\check_harness.py` when Python is available.
 - Run any stack-specific checks documented here once the stack exists.
+- Run `scripts/check_failure_memory.py` after adding or updating
+  `docs/failures/*.md`.
+- Run `scripts/check_decision_memory.py` for implementation diffs before the
+  final report; treat warnings as a prompt to add or update an ADR, cite an
+  existing ADR, or explain why no decision memory is needed.
 - Update docs when commands, architecture, conventions, or known failures
   change.
 - Report assumptions, checks run, and remaining manual steps.
