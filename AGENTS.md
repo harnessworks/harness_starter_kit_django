@@ -188,6 +188,14 @@ Before reporting completion:
 - Run `scripts/check_decision_memory.py` for implementation diffs before the
   final report; treat warnings as a prompt to add or update an ADR, cite an
   existing ADR, or explain why no decision memory is needed.
+- For substantial Harness work, decide whether a task outcome record is needed.
+  Record one when the work changes Harness command workflows, checks,
+  adoption/update reporting, effectiveness evidence, known failure paths, CI or
+  verification gates, or high-risk integration behavior. Skip records for
+  trivial wording, typo, link-label, or formatting changes, and state the skip
+  reason in the final report. For harness-maintenance work, default comparable
+  product-task inclusion to false unless the task is intentionally part of a
+  comparable product-task run.
 - Update docs when commands, architecture, conventions, or known failures
   change.
 - Report assumptions, checks run, and remaining manual steps.

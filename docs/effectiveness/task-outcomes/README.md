@@ -52,6 +52,13 @@ Files or areas changed, at a high level.
 
 Commands run and results.
 
+## Effectiveness Inclusion
+
+State whether the record is included in an effectiveness report and whether it
+counts as a comparable product-task run. Harness-maintenance work normally uses
+`include_in_comparable_product_task_count: false` unless the task is explicitly
+part of a comparable product-task evaluation.
+
 ## Outcome
 
 What changed, what passed, and any follow-up worth carrying forward.

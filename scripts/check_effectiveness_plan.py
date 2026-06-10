@@ -57,6 +57,38 @@ EFFECTIVENESS_SECTIONS = (
 
 TODO_RE = re.compile(r"\bTODO\b", flags=re.IGNORECASE)
 SECTION_RE = re.compile(r"^##\s+", flags=re.MULTILINE)
+COMPLETED_OUTCOME_PATTERNS = (
+    re.compile(
+        r"\b(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"
+        r"comparable\s+product-task\s+runs?\s+have\s+been\s+completed\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:all\s+)?(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"
+        r"planned\s+product-task\s+records?\s+are\s+complete\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bproduct-task\s+outcomes\s+counted\s*\|\s*"
+        r"(?:not available|unknown|n/a)\s*\|\s*"
+        r"(?:[1-9]\d*|one|two|three|four|five|six|seven|eight|nine|ten)\b",
+        flags=re.IGNORECASE,
+    ),
+)
+STALE_NO_COMPLETED_PATTERNS = (
+    re.compile(
+        r"\bno\s+completed\s+(?:product[- ]task\s+)?records?\s+yet\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bno\s+completed\s+product[- ]task\s+runs?\s+yet\b",
+        flags=re.IGNORECASE,
+    ),
+    re.compile(
+        r"\brecord\s+.{1,160}\btask\s+outcomes\s+as\s+they\s+run\b",
+        flags=re.IGNORECASE,
+    ),
+)
 FAILURE_RECORD_RE = re.compile(
     r"`?(docs/failures/[^\s,;)`]+)`?",
     flags=re.IGNORECASE,
@@ -311,6 +343,12 @@ def validate_effectiveness_report(path: Path, text: str) -> list[Finding]:
             findings.append(Finding(path, f"missing required section: {section}"))
     if TODO_RE.search(text):
         findings.append(Finding(path, "effectiveness report still contains TODO"))
+    if any(pattern.search(text) for pattern in COMPLETED_OUTCOME_PATTERNS) and any(
+        pattern.search(text) for pattern in STALE_NO_COMPLETED_PATTERNS
+    ):
+        findings.append(
+            Finding(path, "contradictory effectiveness-report completion language")
+        )
     return findings
 
 

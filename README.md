@@ -125,6 +125,7 @@ flowchart TD
 | Domain glossary | [docs/domain/glossary.md](docs/domain/glossary.md) | Board and Post domain vocabulary |
 | Failure notes | [docs/failures/README.md](docs/failures/README.md) | Place to record mistakes or failed approaches that should not be repeated |
 | Harness wrapper | [scripts/check_harness.py](scripts/check_harness.py) | Runs documentation drift, structure drift, encoding hygiene, effectiveness, memory, Django checks, and tests together |
+| Validation coverage | [docs/validation.md](docs/validation.md) | Binds local check scripts to the normal gate and focused validation commands |
 | Docs drift check | [scripts/check_docs_drift.py](scripts/check_docs_drift.py) | Detects broken local references in README and docs |
 | Structure check | [scripts/check_structure.py](scripts/check_structure.py) | Detects temporary files, backup files, and drift-prone files |
 | Encoding hygiene check | [scripts/check_encoding_hygiene.py](scripts/check_encoding_hygiene.py) | Detects invalid UTF-8 and common Korean mojibake markers |
@@ -136,6 +137,8 @@ flowchart TD
 | Decision memory rules | [.harness/decision-memory-rules.json](.harness/decision-memory-rules.json) | Configures Django paths watched by the decision-memory check |
 | CI Harness check | [.github/workflows/harness-check.yml](.github/workflows/harness-check.yml) | Runs local Harness checks in GitHub Actions |
 | Update report | [docs/harness/harness-update-report.md](docs/harness/harness-update-report.md) | Records what was applied or skipped from the latest kit update |
+| Evaluation index | [docs/evaluation.md](docs/evaluation.md) | Separates harness health from agent effectiveness evidence |
+| Maintenance evidence report | [docs/effectiveness/effectiveness-report-harness-maintenance.md](docs/effectiveness/effectiveness-report-harness-maintenance.md) | Aggregates non-comparable Harness-maintenance outcomes |
 | Impact evaluation | [evaluation/harness-impact.md](evaluation/harness-impact.md) | Evaluates the practical benefits and limits of Harness Kit in this project |
 
 ## Harness Kit Evaluation

@@ -24,6 +24,14 @@ Follow-up resolved on 2026-06-03: decision-memory and failure-memory checks are
 now part of the normal Harness gate. See
 `docs/decisions/0013-adopt-decision-and-failure-memory-checks.md`.
 
+Follow-up resolved on 2026-06-10: the Harness update refreshed source tracking
+to the canonical starter-kit URL and tightened local memory/effectiveness
+validators for command-reference and report-consistency checks. The task
+outcome convention now records whether Harness-maintenance work counts as
+comparable product-task evidence, and `docs/validation.md` plus
+`docs/evaluation.md` now make validation binding and effectiveness boundaries
+explicit.
+
 ## Target Repository Observed
 
 - Stack and framework: Django was initialized after harness adoption. The root
@@ -162,7 +170,15 @@ Result: Passed. The generated `scripts\__pycache__` artifact from
 - Memory checks: `scripts/check_decision_memory.py` warns when watched Django
   implementation diffs lack a decision-record change, and
   `scripts/check_failure_memory.py` validates failure-note detection or
-  prevention links.
+  prevention links, including package-script, Make, Just, Maven, Gradle, and Go
+  command references when those command families are named in failure records.
+- Effectiveness evidence checks:
+  `scripts/check_effectiveness_plan.py --require-report` validates adoption and
+  effectiveness report structure and flags contradictory effectiveness-report
+  completion language.
+- Validation binding: `docs/validation.md` names the normal Harness gate and
+  focused checks, while `docs/evaluation.md` separates harness health from
+  agent effectiveness evidence.
 - Target-specific architecture checks: `scripts/check_harness.py` now runs
   Django system checks and tests when `manage.py` exists.
 - Not added: Additional import-boundary or service-layer checks remain deferred

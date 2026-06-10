@@ -38,6 +38,8 @@ OPTIONAL_REFERENCES = {
     "harness-starter-kit",
     "harness-starter-kit/",
     "manage.py",
+    "vendor",
+    "vendor/",
 }
 OPTIONAL_PREFIXES = (
     ".venv/",
@@ -48,6 +50,7 @@ OPTIONAL_PREFIXES = (
     ".ruff_cache/",
     "__pycache__/",
     "harness-starter-kit/",
+    "vendor/",
 )
 
 BACKTICK_RE = re.compile(r"`([^`\n]+)`")
